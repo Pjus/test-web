@@ -77,7 +77,7 @@ class RegisterForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super(RegisterForm, self).save(commit=False)
-        user.level = '3'
+        user.level = '2'
         user.is_active = False
         user.save()
 

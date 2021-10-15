@@ -75,17 +75,25 @@
                     {{ form.content }}
                 </div>
             </div>
+
+
             
-            <div class="card-footer" style="padding-left: 0px; margin-top:18px;">
-                <div class="form-group">
-                    <div class="col-sm-12">
-                        {{ form.upload_files }}
-                        <small id="help" class="form-text text-muted" style="margin-bottom: -15px;">
-                            &nbsp;&nbsp;[파일 업로드]&nbsp;&nbsp;<i class="fas fa-upload"></i>&nbsp;10MB 이하의 파일만 첨부 가능합니다. 여러 파일은 압축해서 업로드해주세요.
-                        </small>
+            <div class="jumbotron container row">
+                <div class="col-md-6">
+                    <h1>Add Question</h1>
+                    <div class="card card-body">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                            {{form.as_p}}
+                            <br>
+                        <input type="submit" name="Submit">
+                        </form>
+                        </div>
                     </div>
                 </div>
+            
             </div>
+ 
             <div class="text-right" style="margin-top: 10px;">
 
                 {% if edit %}
@@ -113,58 +121,5 @@
 
 </script>
 
-{% if filename %}
-<script type = "text/javascript">
-    $('[href="{{ file_url }}"]').html("{{ filename }}");
-    $('#upload_files-clear_id').css({opacity:'100', position:'relative', 'pointer-events':'auto'})
-
-    $("#id_upload_files").change(function() {
-        if ($('#id_upload_files').get(0).files.length == 1) {
-            $(".col-sm-12").contents().get(0).nodeValue = '[첨부파일 변경 시 기존 파일은 삭제됩니다.]'
-            $('#upload_files-clear_id').attr("checked", false)
-            $('#upload_files-clear_id').prev().hide()
-            $('#upload_files-clear_id').next().hide()
-            $('#upload_files-clear_id').hide()
-        }
-    });
-
-    $('#upload_files-clear_id').on('click', function(){
-        if($(this).prop('checked')){
-            $('#id_upload_files').hide()
-            document.getElementById('id_upload_files').previousSibling.nodeValue = '[업로드 된 첨부파일을 삭제합니다.]'
-        } else{
-            $('#id_upload_files').show()
-            document.getElementById('id_upload_files').previousSibling.nodeValue = '변경: '
-        }
-    });
-
-    $('#write').click( function() {
-        if($('#id_upload_files').get(0).files.length == 1){
-            $('#fileChangeCheck').attr("checked",true)
-        }
-    });
-</script>
-{% endif %}
 
 {% endblock %}
-
-
-<!-- {% block content %}
- 
-<div class="jumbotron container row">
-    <div class="col-md-6">
-        <h1>Add Question</h1>
-        <div class="card card-body">
-           <form action="" method="POST">
-              {% csrf_token %}
-                {{form.as_p}}
-                <br>
-             <input type="submit" name="Submit">
-             </form>
-            </div>
-        </div>
-    </div>
- 
-</div>
- 
-{% endblock %} -->

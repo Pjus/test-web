@@ -76,7 +76,7 @@ class EduListView(ListView):
 
 
 
-# 공지사항 게시글 보기
+# 교육자료 게시글 보기
 @login_message_required
 def edu_detail_view(request, pk):
     notice = get_object_or_404(EduContents, pk=pk)

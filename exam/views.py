@@ -9,6 +9,9 @@ import exam
 from users.decorators import * 
 from .forms import *
 
+from django.shortcuts import render, get_object_or_404, redirect
+
+
 class ExamListView(ListView):
     model = QuestionContents
     paginate_by = 10
@@ -60,36 +63,63 @@ class ExamListView(ListView):
 
 
 
-# # 시험등록
-# @login_message_required
-# @admin_required
-# def exam_write_view(request):
-#     if request.method == "POST":
-#         form = addQuestionForm(request.POST)
-#         user = request.session['user_id']
-#         user_id = User.objects.get(user_id = user)
+# 시험등록
+@login_message_required
+@admin_required
+def exam_write_view(request):
+    if request.method == "POST":
+        form = addExamForm(request.POST)
+        user = request.session['user_id']
+        user_id = User.objects.get(user_id = user)
 
-#         if form.is_valid():
-#             exam = form.save(commit = False)
-#             exam.writer = user_id
-#             exam.save()
-#             return redirect('exam:exam_list')
-#     else:
-#         form = addQuestionForm()
-#     return render(request, "exam/exam_write.html", {'form': form})
+        if form.is_valid():
+            exam = form.save(commit = False)
+            exam.writer = user_id
+            exam.save()
+            return redirect('exam:exam_list')
+    else:
+        form = addQuestionForm()
+    return render(request, "exam/exam_write.html", {'form': form})
+
+
+@login_message_required
+def exam_detail_view(request, pk):
+    exam = get_object_or_404(QuestionContents, pk=pk)
+
+    context = {
+        'exam': exam,
+    }
+
+    return render(request, 'exam/exam_detail.html', context)
 
 
 @login_message_required
 @admin_required
-def exam_write_view(request):    
-    if request.user.is_staff:
-        form=addQuestionForm()
-        if(request.method=='POST'):
-            form=addQuestionForm(request.POST)
-            if(form.is_valid()):
-                form.save()
-                return redirect('/')
-        context={'form':form}
-        return render(request,'exam/exam_write.html',context)
-    else: 
-        return redirect('index') 
+def question_write_view(request, pk):
+    exam = QuestionContents.objects.get(id=pk)
+    
+    if request.method == "POST":
+        if(exam.writer == request.user or request.user.level == '0'):
+            form = addExamForm(request.POST, instance=exam)
+            if form.is_valid():
+                exam = form.save(commit = False)
+                exam.save()
+                messages.success(request, "수정되었습니다.")
+                return redirect('/exam/'+str(pk))
+    else:
+        exam = QuestionContents.objects.get(id=pk)
+        if exam.writer == request.user or request.user.level == '0':
+            form = addExamForm(instance=exam)
+            context = {
+                'form': form,
+                'edit': '수정하기',
+            }
+            return render(request, "exam/exam_write.html", context)
+        else:
+            messages.error(request, "본인 게시글이 아닙니다.")
+            return redirect('/exam/'+str(pk))
+
+@login_message_required
+def exam_test_view(request, pk):
+    exam = QuestionContents.objects.get(id=pk)
+    return render(request)
