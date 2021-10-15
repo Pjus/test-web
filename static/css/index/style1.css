@@ -1,0 +1,57 @@
+body {
+    background-color: azure;
+}
+
+/* Set font family */
+* {
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  /* Allows hamburger button to communicate with navbar items */
+  /* Displays hamburger and navbar items in one row */
+  .navbar {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    float: right;
+  }
+  
+  /* Presents navbar items in a row without list style (no bullets) */
+  .navbar-list {
+    display: flex;
+    flex-direction: row;
+    list-style-type: none;
+  }
+  
+  /* Gives space between navbar items */
+  .navbar-item {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+  
+  /* Removes text decoration from navbar text */
+  .navbar-link {
+    text-decoration: none;
+    color: black;
+    font-size: 18pt;
+  }
+  
+  /* Allows font to change on hover */
+  .navbar-link:hover {
+    text-decoration: underline;
+    color: #d55e2d;
+  }
+  
+  /* Hides hamburger */
+  .button {
+    display: none;
+  }
+  
+  @media (max-width: 690px) {
+    .navbar-button {
+      display: inline-block;
+      position: absolute;
+      right: 0px;
+      top: 0px;
+    }
+  }
