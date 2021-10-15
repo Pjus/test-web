@@ -1,0 +1,59 @@
+# shell
+gsutil cp -r ssd_mobilenet_v2_fpnlite_320x320_coco17_tpu-8 gs://ladofa9
+
+#pipeline
+fine_tune_checkpoint: "gs://ladofa9/ssd_mobilenet_v2_fpnlite_320x320_coco17_tpu-8"
+
+fine_tune_checkpoint_type: "detection"
+
+train_input_reader {
+  label_map_path: "gs://ladofa9/records/label_map.pbtxt"
+  tf_record_input_reader {
+    input_path: "gs://ladofa9/records/coco_train.record*"
+  }
+}
+
+eval_input_reader {
+  label_map_path: "gs://ladofa9/records/label_map.pbtxt"
+  shuffle: false
+  num_epochs: 1
+  tf_record_input_reader {
+    input_path: "gs://ladofa9/records/coco_train.record*"
+  }
+}
+
+
+#launch.json
+{
+            "name": "train mpii - tpu",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/object_detection/model_main_tf2.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--model_dir=gs://ladofa9/head",
+                "--pipeline_config_path=/home/ladofa9/models/research/nets/ssd_mobilenet_v2_fpnlite_320x320_coco17_tpu-8/pipeline.config",
+                "--alsologtostderr",
+                "--use_tpu=true",
+                "--tpu_name=node-1",
+            ]
+        },
+
+{
+            "name": "tf2-EXPORT-lite head",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/object_detection/export_tflite_graph_tf2.py",
+            "console": "integratedTerminal",
+            "args":[
+                "--pipeline_config_path=/home/ladofa9/mpii/models/research/nets/ssd_mobilenet_v2_fpnlite_320x320_coco17_tpu-8/pipeline.config",
+                "--trained_checkpoint_dir=gs://ladofa-bucket/test_head3",
+                "--output_directory=/home/ladofa9/mpii/export-lite",
+            ]
+        },
+
+tflite_convert --output_file=head.tflite --saved_model_dir=saved_model
+
+
+#pipeline
+fine_tune_checkpoint: "gs://ladofa9/ssd_mobilenet_v2_fpnlite_320x320_coco17_tpu-8/checkpoint/ckpt-0"
