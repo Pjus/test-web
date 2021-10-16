@@ -21,17 +21,19 @@ def get_cert(request):
 class GeneratePDF(View):
     def get(self, request, *args, **kwargs):
         template = get_template('cert/invoice.html')
+
         context = {
             "invoice_id": 123,
-            "customer_name": "John Cooper",
+            "customer_name": request.user,
             "amount": 1399.99,
-            "today": "Today",
+            "today": datetime.today().strftime('%Y/%m/%d'),
         }
+        
         html = template.render(context)
         pdf = render_to_pdf('cert/invoice.html', context)
         if pdf:
             response = HttpResponse(pdf, content_type='application/pdf')
-            filename = f"{datetime}.pdf"
+            filename = f"{datetime.today().strftime('%Y/%m/%d')}_{request.user}.pdf"
             content = "inline; filename='%s'" %(filename)
             download = request.GET.get("download")
             if download:

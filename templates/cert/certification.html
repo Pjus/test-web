@@ -28,9 +28,9 @@
             <tbody>
                 {% if cert_list %}
                 {% for cert in cert_list %}
-                <tr class="text-center" style="cursor:pointer;" onclick="location.href='/edu/{{ notice.id }}/'">
+                <tr class="text-center" style="cursor:pointer;" onclick="location.href='/cert/{{ cert.id }}/'">
                     <td style="font-weight: 500;">{{ forloop.counter }} </td>
-                    <td class="text-left" style="width:50%; font-weight: 600;"><a id="edu-{{ notice.id }}">{{ cert.title|truncatechars:30 }}</a></td>
+                    <td class="text-left" style="width:50%; font-weight: 600;"><a id="cert-{{ cert.id }}">{{ cert.title|truncatechars:30 }}</a></td>
                     <td style="font-weight: 500;">{{ cert.catagory }}</td>
                     <td style="font-weight: 500;">{{ cert.registered_date|date:'Y. m. d' }}</td>
                 </tr>
@@ -81,7 +81,7 @@
         {% if request.user.level == '0' or request.user.level == '1' %}
         <div>
             <div>
-                <a href="{% url 'edu:edu_write' %}" id="write_btn" class="btn btn-sm">글쓰기</a>
+                <a href="{% url 'cert:cert_write' %}" id="write_btn" class="btn btn-sm">글쓰기</a>
             </div>
         </div>
         <br>
