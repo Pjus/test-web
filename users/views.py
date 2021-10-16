@@ -25,11 +25,12 @@ from .helper import send_mail, email_auth_num
 from .decorators import *
 from .models import User
 
-from cart.context_processors import counter
+# from cart.context_processors import counter
 # Create your views here.
 
 # Home
 def index(request):
+    print(request.user)
     return render(request, 'users/index.html')
 
 @method_decorator(logout_message_required, name='dispatch')
@@ -114,8 +115,6 @@ def logout_view(request):
 @login_message_required
 def main_view(request):
     context = {
-        'item_count' : counter(request)['item_count']
-
     }
     return render(request, 'users/main.html', context)
 

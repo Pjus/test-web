@@ -1,12 +1,14 @@
+import re
 import urllib
 import os
 import mimetypes
 
+from django.conf import settings
 from django.views.generic import ListView
 from users.decorators import login_message_required, admin_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.shortcuts import redirect
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, response
 
 # Search
 from django.contrib import messages
@@ -16,6 +18,9 @@ from .forms import ProductWriteForm
 from .models import Product, Videos
 from users.models import User
 from users.decorators import admin_required
+
+#show pdf
+import fitz
 
 class EduListView(ListView):
     model = Product
@@ -71,20 +76,27 @@ class EduListView(ListView):
 @login_message_required
 def edu_detail_view(request, pk):
     notice = get_object_or_404(Product, pk=pk)
-    session_cookie = request.session['user_id']
-    cookie_name = F'notice_hits:{session_cookie}'
-    print(request.user)
-    if request.user:
-        notice_auth = True
-    else:
-        notice_auth = False
-
-    context = {
-        'notice': notice,
-        'notice_auth': notice_auth,
-    }
-
-    return render(request, 'edu/edu_detail.html', context)
+    path_dir = f"{settings.STATICFILES_DIRS[0]}/img/{notice.name}"
+    imgs = []
+    if notice.upload_files:
+        filepath = settings.MEDIA_ROOT + "/" + str(notice.upload_files)
+        doc = fitz.open(filepath)
+        if os.path.isdir(path_dir):
+            imgs = os.listdir(path_dir)
+        else:
+            os.mkdir(path_dir)
+            for idx, pg in enumerate(doc):
+                pix = pg.getPixmap()
+                output = f"{path_dir}/outfile_{idx}.png"
+                pix.writePNG(output)
+        imgs = os.listdir(path_dir)
+        imgs = [f"{notice.name}/{i}" for i in imgs]
+        
+        context = {
+            'notice': notice,
+            'imgList': imgs,
+        }
+        return render(request, 'edu/edu_detail.html', context)
 
 # 글쓰기
 @login_message_required

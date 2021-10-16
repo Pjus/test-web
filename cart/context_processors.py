@@ -1,18 +1,19 @@
 from .models import CartItem, Cart
 from .views import _cart_id
-from users.decorators import *
 
-@login_message_required
 def counter(request):
     item_count = 0
-    if 'admin' in request.path:
-        return {}
+    if request.user.is_anonymous:
+        return dict(item_count = item_count)
     else:
-        try:
-            cart = Cart.objects.filter(user=_cart_id(request))
-            cart_items = CartItem.objects.all().filter(cart=cart[:1])
-            for cart_item in cart_items:
-                item_count += cart_item.quantity
-        except Cart.DoesNotExist:
-            item_count = 0
-    return dict(item_count = item_count)
+        if 'admin' in request.path:
+            return {}
+        else:
+            try:
+                cart = Cart.objects.filter(user=_cart_id(request))
+                cart_items = CartItem.objects.all().filter(cart=cart[:1])
+                for cart_item in cart_items:
+                    item_count += cart_item.quantity
+            except Cart.DoesNotExist:
+                item_count = 0
+            return dict(item_count = item_count)

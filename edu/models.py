@@ -48,6 +48,8 @@ class Product(models.Model):
             os.remove(os.path.join(settings.MEDIA_ROOT, self.upload_files.path))
         super(Product, self).delete(*args, **kargs)
 
+    
+
 
 class Videos(models.Model):
     title = models.CharField(max_length=100)

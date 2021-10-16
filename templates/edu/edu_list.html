@@ -9,7 +9,7 @@
 <div class="container">
     <div class="row mt-5">
         <div class="col-12">
-            <h4 style="font-weight: bold;">교육상품</h4>
+            <h4 style="font-weight: bold;">재범방지교육</h4>
             {% if q %}
             <h5 style="color: gray; font-weight: 550;"><i class="fas fa-search"></i>&nbsp;'{{ q }}' 검색 결과입니다.</h5>
             {% endif %}
@@ -22,7 +22,7 @@
                 <thead style="border-top: 1px solid #dee2e6;">
                     <tr class="text-center">
                         <th style="font-weight: bold; font-size: 16px;">번호</th>
-                        <th style="font-weight: bold; font-size: 16px;">상품명</th>
+                        <th style="font-weight: bold; font-size: 16px;">교육명</th>
                         <th style="font-weight: bold; font-size: 16px;">분류</th>
                         <th style="font-weight: bold; font-size: 16px;">가격</th>
                         <th style="font-weight: bold; font-size: 16px;">등록일</th>
@@ -75,8 +75,8 @@
         {% if request.user.level == '0' or request.user.level == '1' %}
         <div>
             <div>
-                <a href="{% url 'edu:edu_write' %}" id="write_btn" class="btn btn-sm">상품추가</a>
-                <button class="btn btn-sm" id="detail_btn">장바구니 추가</button>
+                <a href="{% url 'edu:edu_write' %}" id="write_btn" class="btn btn-sm">상품작성</a>
+                <button class="btn btn-sm" id="detail_btn">담기</button>
             </div>
         </div>
         <br>

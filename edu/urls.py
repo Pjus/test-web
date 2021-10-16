@@ -5,6 +5,7 @@ app_name = 'edu'
 
 urlpatterns = [
     path('', views.EduListView.as_view(), name='edu_list'),
+    # path('pdf', views.pdf_view, name='pdf'),
     path('<int:pk>/', views.edu_detail_view, name='edu_detail'),
     path('write/', views.edu_write_view, name='edu_write'),
     path('<int:pk>/edit/', views.edu_edit_view, name='edu_edit'),

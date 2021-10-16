@@ -1,4 +1,5 @@
 {% extends "users/main_base.html" %}
+{% load static %}
 {% load humanize %}
 
 {% block mobileView %}
@@ -30,8 +31,13 @@
                     </div>
                     {% endif %}
                     <!--내용-->
-                    <div>
-                        {{ notice.content | safe }}
+                    
+                    <div id="viewer">
+                        {% for img in imgList %}
+                            <p class="pdf">
+                                <img src="/static/img/{{ img }}" alt="">
+                            </p>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -79,6 +85,7 @@
     function delete_modal() {
         location.replace('/edu/{{ notice.id }}/delete/');
     }
+
 </script>
 
 {% endblock %}
