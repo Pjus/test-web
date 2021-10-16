@@ -14,7 +14,7 @@ class addExamForm(forms.ModelForm):
 
     class Meta:
         model = QuestionContents
-        fields = ['title', 'catagory']
+        fields = ['title', 'category']
 
 
 class addQuestionForm(forms.ModelForm):

@@ -62,6 +62,9 @@ INSTALLED_APPS = [
     'edu.apps.EduConfig',
     'cert.apps.CertConfig',
     'exam.apps.ExamConfig',
+    'cart.apps.CartConfig',
+
+
 
 ]
 

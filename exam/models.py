@@ -16,7 +16,7 @@ def get_file_path(instance, filename):
 class QuestionContents(models.Model):
     title = models.CharField(max_length=128, verbose_name='제목', unique=True)
     writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=SET_NULL, null=True, verbose_name='작성자')
-    catagory = models.CharField(choices=CATAGORY_CHOICES, max_length=128, verbose_name="분류")
+    category = models.CharField(choices=CATEGORY_CHOICES, max_length=128, verbose_name="분류", null=True)
     registered_date = models.DateTimeField(auto_now_add=True, verbose_name='등록시간')
     passed = models.BooleanField(default=False)
 
@@ -37,7 +37,7 @@ class QuestionContents(models.Model):
 
 class QuesModel(models.Model):
     title = models.CharField(max_length=128, verbose_name='제목', unique=True)
-    catagory = models.CharField(choices=CATAGORY_CHOICES, max_length=128, verbose_name="분류", null=True)
+    category = models.CharField(choices=CATEGORY_CHOICES, max_length=128, verbose_name="분류", null=True)
     question = models.CharField(max_length=200,null=True)
     op1 = models.CharField(max_length=200,null=True)
     op2 = models.CharField(max_length=200,null=True)

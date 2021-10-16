@@ -48,7 +48,7 @@
 <div class="container">
     <div class="row mt-5">
         <div class="col-12">
-            <h4 style="font-weight: bold;">공지사항</h4>
+            <h4 style="font-weight: bold;">상품등록</h4>
         </div>
     </div>
 
@@ -62,17 +62,20 @@
                     <div class="md-form form-group" style="margin-top: 8.5px;">
                         <div style="padding: 0 5.5px;">
                             <!-- <label for="form_title" class="control-label">{{ form.title.label }}</label> -->
-                            {{ form.title }}
+                            {{ form.name }}
                         </div>
+                        <br>
                         <div>
-                            {{ form.catagory }}
+                            가격: {{ form.price }}
+                        </div>
+                        <br>
+                        <div>
+                            분류: {{ form.category }}
                         </div>
                     </div>
                 </div>
 
                 <div>
-                    <!--내용-->
-                    {{ form.content }}
                 </div>
             </div>
             
@@ -81,7 +84,12 @@
                     <div class="col-sm-12">
                         {{ form.upload_files }}
                         <small id="help" class="form-text text-muted" style="margin-bottom: -15px;">
-                            &nbsp;&nbsp;[파일 업로드]&nbsp;&nbsp;<i class="fas fa-upload"></i>&nbsp;10MB 이하의 파일만 첨부 가능합니다. 여러 파일은 압축해서 업로드해주세요.
+                            &nbsp;&nbsp;[PDF 파일 업로드]&nbsp;&nbsp;<i class="fas fa-upload"></i>&nbsp;10MB 이하의 파일만 첨부 가능합니다. 여러 파일은 압축해서 업로드해주세요.
+                        </small>
+                        <br>
+                        {{ form.image }}
+                        <small id="help" class="form-text text-muted" style="margin-bottom: -15px;">
+                            &nbsp;&nbsp;[이미지 파일 업로드]&nbsp;&nbsp;<i class="fas fa-upload"></i>&nbsp;10MB 이하의 파일만 첨부 가능합니다. 여러 파일은 압축해서 업로드해주세요.
                         </small>
                     </div>
                 </div>

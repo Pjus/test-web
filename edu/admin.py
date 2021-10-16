@@ -2,18 +2,16 @@ from django.contrib import admin
 
 # Register your models here.
 # Register your models here.
-from .models import Videos, EduContents
+from .models import Videos, Product
 
-class EduContentsAdmin(admin.ModelAdmin):
-    list_display = (
-        'title', 
-        'writer',
-        'catagory',
-        'hits',
-        'registered_date',
-        'upload_files',
-        )
-    search_fields = ('title', 'content', 'writer__user_id', 'catagory')
 
-admin.site.register(EduContents, EduContentsAdmin)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ['name', 'price', 'category', 'registered_date', 'updated_date', 'upload_files']
+    list_editable = ['category', 'price', 'upload_files']
+    list_per_page = 20
+
+
+admin.site.register(Product, ProductAdmin)
 admin.site.register(Videos)
+
+

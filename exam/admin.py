@@ -8,18 +8,18 @@ class QuestionContentsAdmin(admin.ModelAdmin):
     list_display = (
         'title', 
         'writer',
-        'catagory',
+        'category',
         'registered_date',
         'passed'
         )
-    search_fields = ('title', 'user', 'catagory', 'registered_date')
+    search_fields = ('title', 'user', 'category', 'registered_date')
 
 class QuestionAdmin(admin.ModelAdmin):
     list_display = (
         'title', 
-        'catagory',
+        'category',
         )
-    search_fields = ('title', 'catagory')
+    search_fields = ('title', 'category')
 
 # Register your models here.
 admin.site.register(QuesModel, QuestionAdmin)

@@ -93,6 +93,11 @@
                     <li>
                         <a href="{% url 'users:main' %}"><i class="fas fa-home" style="margin-left:1px;"></i>&nbsp;&nbsp;메인으로</a>
                     </li>
+                    {% if item_count > 0 %}
+                    <li>
+                        <a href="{% url 'cart:cart_detail' %}"><i class="fas fa-shopping-cart"></i>&nbsp;&nbsp;장바구니 ({{ item_count }})</a>
+                    </li>
+                    {% endif %}
                     <li>
                         <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle menu1"><i
                                 class="fas fa-user" style="margin:0 2.5px;"></i>&nbsp;&nbsp;My</a>
@@ -100,12 +105,10 @@
 
                         </ul>
                     </li>
-                    <!-- <li>
-                        <a href="#">About</a>
-                    </li> -->
+
                     <li>
                         <a href="#pageSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle menu2"><i
-                                class="fas fa-pen" style="margin-right:4px;"></i>&nbsp;&nbsp;sdf</a>
+                                class="fas fa-pen" style="margin-right:4px;"></i>&nbsp;&nbsp;시험보기</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu1">
    
                         </ul>
