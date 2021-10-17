@@ -9,7 +9,7 @@ from django.views.generic import ListView
 from users.decorators import login_message_required, admin_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.shortcuts import redirect
-from django.http import HttpResponse, Http404, response
+from django.http import HttpResponse, Http404, request, response
 
 # Search
 from django.contrib import messages
@@ -187,13 +187,21 @@ def edu_download_view(request, pk):
 
 class StudyListView(ListView):
     model = PurchasedItem
+    products = Product
     paginate_by = 10
     template_name = 'edu/study_list.html'  #DEFAULT : <app_label>/<model_name>_list.html
     context_object_name = 'study_list'        #DEFAULT : <model_name>_list html name
     def get_queryset(self):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '')
-        study_list = PurchasedItem.objects.order_by('id') 
+
+        study_list = []
+        purchased = PurchasedItem.objects.filter(user=self.request.user)
+        for item in purchased:
+            study = Product.objects.get(name=item.product.name)
+            study_list.append(study)
+
+
         if search_keyword :
             if len(search_keyword) > 1 :
                 if search_type == 'all':
