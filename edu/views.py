@@ -2,6 +2,7 @@ import re
 import urllib
 import os
 import mimetypes
+import natsort
 
 from django.conf import settings
 from django.views.generic import ListView
@@ -18,6 +19,9 @@ from .forms import ProductWriteForm
 from .models import Product, Videos
 from users.models import User
 from users.decorators import admin_required
+
+
+from payment.models import PurchasedItem
 
 #show pdf
 import fitz
@@ -91,10 +95,12 @@ def edu_detail_view(request, pk):
                 pix.writePNG(output)
         imgs = os.listdir(path_dir)
         imgs = [f"{notice.name}/{i}" for i in imgs]
+        imgs = natsort.natsorted(imgs)
         
         context = {
             'notice': notice,
             'imgList': imgs,
+            'page1':imgs[0],
         }
         return render(request, 'edu/edu_detail.html', context)
 
@@ -174,3 +180,55 @@ def edu_download_view(request, pk):
             response['Content-Disposition'] = 'attachment;filename*=UTF-8\'\'%s' % quote_file_url
             return response
         raise Http404
+
+
+
+
+
+class StudyListView(ListView):
+    model = PurchasedItem
+    paginate_by = 10
+    template_name = 'edu/study_list.html'  #DEFAULT : <app_label>/<model_name>_list.html
+    context_object_name = 'study_list'        #DEFAULT : <model_name>_list html name
+    def get_queryset(self):
+        search_keyword = self.request.GET.get('q', '')
+        search_type = self.request.GET.get('type', '')
+        study_list = PurchasedItem.objects.order_by('id') 
+        if search_keyword :
+            if len(search_keyword) > 1 :
+                if search_type == 'all':
+                    search_notice_list = study_list.filter(Q (title__icontains=search_keyword) | Q (content__icontains=search_keyword) | Q (writer__user_id__icontains=search_keyword))
+                elif search_type == 'title':
+                    search_notice_list = study_list.filter(title__icontains=search_keyword)    
+                elif search_type == 'catagory':
+                    search_notice_list = study_list.filter(catagory__icontains=search_keyword)    
+                return search_notice_list
+            else:
+                messages.error(self.request, '검색어는 2글자 이상 입력해주세요.')
+        return study_list
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginator = context['paginator']
+        page_numbers_range = 5
+        max_index = len(paginator.page_range)
+
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range = paginator.page_range[start_index:end_index]
+        context['page_range'] = page_range
+
+        search_keyword = self.request.GET.get('q', '')
+        search_type = self.request.GET.get('type', '')
+
+        if len(search_keyword) > 1 :
+            context['q'] = search_keyword
+        context['type'] = search_type
+
+        return context

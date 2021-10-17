@@ -63,6 +63,8 @@ INSTALLED_APPS = [
     'cert.apps.CertConfig',
     'exam.apps.ExamConfig',
     'cart.apps.CartConfig',
+    'payment.apps.PaymentConfig',
+
 
 
 

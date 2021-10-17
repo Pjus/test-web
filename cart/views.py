@@ -3,6 +3,7 @@ from edu.models import Product
 from .models import CartItem, Cart
 from django.core.exceptions import ObjectDoesNotExist
 from users.decorators import *
+
 # Create your views here.
 
 @login_message_required
@@ -10,10 +11,11 @@ def _cart_id(request):
     cart = request.user
     return cart
 
+
+
 @login_message_required
 def add_cart(request):
     selected = request.POST.getlist('selected')
-    print(selected)
     for product_id in selected:
         product = Product.objects.get(id=product_id)
         image = product.image
@@ -21,7 +23,7 @@ def add_cart(request):
             cart = Cart.objects.get(user=_cart_id(request))
         except Cart.DoesNotExist:
             cart = Cart.objects.create(
-                user = _cart_id(request)
+                user = _cart_id(request),
             )
             cart.save()
         try:
@@ -41,6 +43,8 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
     try:
         cart = Cart.objects.get(user=_cart_id(request))
         cart_items = CartItem.objects.filter(cart=cart, active=True)
+        if not cart_items:
+            cart.delete()
         for cart_item in cart_items:
             total += (cart_item.product.price * cart_item.quantity)
             counter += cart_item.quantity

@@ -93,29 +93,33 @@
                     <li>
                         <a href="{% url 'users:main' %}"><i class="fas fa-home" style="margin-left:1px;"></i>&nbsp;&nbsp;메인으로</a>
                     </li>
+                    <li>
+                        <a href="{% url 'edu:edu_list' %}"><i
+                                class="fas fa-user" style="margin:0 2.5px;"></i>&nbsp;&nbsp;구입하기</a>
+                        <ul class="collapse list-unstyled" id="homeSubmenu"></ul>
+                    </li>
+
                     {% if item_count > 0 %}
                     <li>
                         <a href="{% url 'cart:cart_detail' %}"><i class="fas fa-shopping-cart"></i>&nbsp;&nbsp;장바구니 ({{ item_count }})</a>
                     </li>
                     {% endif %}
                     <li>
-                        <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle menu1"><i
-                                class="fas fa-user" style="margin:0 2.5px;"></i>&nbsp;&nbsp;My</a>
-                        <ul class="collapse list-unstyled" id="homeSubmenu">
-
-                        </ul>
+                        <a href="{% url 'edu:study_list' %}"><i
+                                class="fas fa-user" style="margin:0 2.5px;"></i>&nbsp;&nbsp;수강하기</a>
+                        <ul class="collapse list-unstyled" id="homeSubmenu"></ul>
                     </li>
-
+                        <!--  data-toggle="collapse" aria-expanded="false" class="dropdown-toggle menu2" -->
                     <li>
-                        <a href="#pageSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle menu2"><i
+                        <a href="#pageSubmenu1"><i
                                 class="fas fa-pen" style="margin-right:4px;"></i>&nbsp;&nbsp;시험보기</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu1">
    
                         </ul>
                     </li>
                     <li>
-                        <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle menu3"><i
-                                class="fas fa-user-graduate" style="margin-right:4px;"></i>&nbsp;&nbsp;graduate</a>
+                        <a href="#pageSubmenu2"><i
+                                class="fas fa-user-graduate" style="margin-right:4px;"></i>&nbsp;&nbsp;수료증</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu2">
                             <!-- <li>
                                 <a href="#">Page 3</a>
@@ -168,22 +172,25 @@
 
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <a href="/" style="margin-left: 30px; font-size: 22px; font-weight: bold; color:#000000f2; cursor: pointer; left:20">TEST</a>
+
+
+
                         <ul class="nav navbar-nav ml-auto">
                             <!-- <li class="nav-item active"> -->
                             <li class="nav-item">
                                 <a class="nav-link" href="/"  style="font-weight: 600;">HOME</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'edu:edu_list' %}"  style="font-weight: 600;">교육</a>
+                                <a class="nav-link" href="{% url 'edu:edu_list' %}"  style="font-weight: 600;">구입</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'edu:edu_list' %}"  style="font-weight: 600;">수강</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'exam:exam_list' %}"  style="font-weight: 600;">시험</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'cert:certification' %}"  style="font-weight: 600;">수료증</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/"  style="font-weight: 600;">결제</a>
                             </li>
                         </ul>
                     </div>
@@ -205,6 +212,7 @@
     {% if message.tags %}
     <script>
         alert("{{ message.message }}")
+
     </script>
     {% endif %}
     {% endfor %}

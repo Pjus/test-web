@@ -27,6 +27,7 @@ urlpatterns = [
     path('cert/', include('cert.urls')),
     path('exam/', include('exam.urls')),
     path('cart/', include('cart.urls')),
+    path('payment/', include('payment.urls')),
 
 ]
 

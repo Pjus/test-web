@@ -1,10 +1,12 @@
 from django.urls import path
 from . import views
 
-app_name = 'exam'
+app_name = 'payment'
 
 urlpatterns = [
-    path('', views.ExamListView.as_view(), name='exam_list'),
+    path('payment/', views.payment_view, name='payment'),
+    path('kakaoPaySuccess/', views.approval, name='payment_success'),
+
 
 
 ]

@@ -1,5 +1,6 @@
 {% extends "users/main_base.html" %}
 {% load static %}
+
 {% load humanize %}
 
 {% block mobileView %}
@@ -8,7 +9,15 @@
 
 {% block contents %}
 <br><br><br>
+
 <div class="container">
+    <button class="sl-prev" onclick="prev_page()"> < </button>
+    <button class="sl-next" onclick="next_page()"> > </button>
+    {% if imgList %}
+    {% for img in imgList %}
+        <input type="hidden" class="myVar" name="imgList" value="/static/img/{{ img }}">
+    {% endfor %}
+    {% endif %}
     <div class="row-mt-5">
         <div class="col-12">
             <!--본문-->
@@ -31,13 +40,12 @@
                     </div>
                     {% endif %}
                     <!--내용-->
-                    
-                    <div id="viewer">
-                        {% for img in imgList %}
-                            <p class="pdf">
-                                <img src="/static/img/{{ img }}" alt="">
-                            </p>
-                        {% endfor %}
+
+                    <div id="img_viewer">
+                        <p class="pdf">
+                            <input type="hidden", id="page_num", value="0">
+                            <img id='img_content' src="/static/img/{{ page1 }}">
+                        </p>
                     </div>
                 </div>
             </div>
@@ -46,10 +54,10 @@
                 {% if request.user.level == '0' %}
                 <button class="btn btn-sm" id="detail_btn" onclick="location.href='/edu/{{ notice.id }}/edit/'">수정</button>
                 <button class="btn btn-sm" id="detail_btn" data-toggle="modal" data-target="#delete_modal">삭제</button>
-                <button class="btn btn-sm" id="detail_btn" onclick="location.href='/cart/add/{{ notice.id }}'">수강하기</button>
+                <button class="btn btn-sm" id="detail_btn" onclick="location.href='/cart/add/{{ notice.id }}'">시험보기</button>
                 <button class="btn btn-sm" id="detail_btn" onclick="location.href='/edu/'">목록으로</button>
                 {% else %}
-                <button class="btn btn-sm" id="detail_btn" onclick="location.href='/cart/add/{{ notice.id }}'">수강하기</button>
+                <button class="btn btn-sm" id="detail_btn" onclick="location.href='/cart/add/{{ notice.id }}'">시험보기</button>
                 <button class="btn btn-sm" id="detail_btn" onclick="location.href='/edu/'">목록으로</button>
                 {% endif %}
             </div>
@@ -78,6 +86,10 @@
 </div>
 
 <script type="text/javascript">
+    const img_list = document.getElementsByName("imgList");
+    const img = document.getElementById('img_content');
+    let page_num = parseInt(document.getElementById('page_num').value);
+
     $(document).ready(function () {
         $('img').css('width', '100%');
     });
@@ -85,6 +97,38 @@
     function delete_modal() {
         location.replace('/edu/{{ notice.id }}/delete/');
     }
+
+    function prev_page() {
+        const prev_page_num = page_num - 1;
+        if (prev_page_num < 0){
+            alert("첫 번째 페이지 입니다.")
+        } else {
+            const new_src = img_list[prev_page_num].value
+            img.src = new_src
+            page_num = prev_page_num
+        }
+
+    }
+
+    function next_page() {
+        const next_page_num = page_num + 1;
+        if (next_page_num === img_list.length){
+            alert("마지막 페이지 입니다.")
+        } else {
+            const new_src = img_list[next_page_num].value
+            img.src = new_src
+            page_num = next_page_num
+        }
+    }
+    document.addEventListener('keydown', function(event) {
+    if(event.keyCode == 37) {
+        prev_page();
+    }
+    else if(event.keyCode == 39) {
+        next_page();
+    }
+
+});
 
 </script>
 

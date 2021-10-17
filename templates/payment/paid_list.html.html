@@ -18,31 +18,26 @@
     <form action="/cart/add/" method="post">
         {% csrf_token %}
         <div>
-            <table class="table table-sm table-hover" id="test">
+            <table class="table table-sm table-hover">
                 <thead style="border-top: 1px solid #dee2e6;">
                     <tr class="text-center">
                         <th style="font-weight: bold; font-size: 16px;">번호</th>
                         <th style="font-weight: bold; font-size: 16px;">교육명</th>
                         <th style="font-weight: bold; font-size: 16px;">분류</th>
-                        <th style="font-weight: bold; font-size: 16px;">가격</th>
-                        <th style="font-weight: bold; font-size: 16px;">등록일</th>
-                        <th style="font-weight: bold; font-size: 16px;">선택</th>
+                        <th style="font-weight: bold; font-size: 16px;">구매일</th>
+                        <th style="font-weight: bold; font-size: 16px;">수료</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% if notice_list %}
                         {% for notice in notice_list %}
-                        <tr class="text-center" style="cursor:pointer;" id="edu-{{ notice.id }}" onclick=select(this.id)>
+                        <tr class="text-center" style="cursor:pointer;" >
                             <td style="font-weight: 500;">{{ forloop.counter }} </td>
-                            {% if request.user.level == '0' or request.user.level == '1' %}
-                            <td  class="text-left" style="width:50%; font-weight: 600;" onclick="location.href='/edu/{{ notice.id }}/'"><a id="edu-{{ notice.id }}">{{ notice.name|truncatechars:30 }}</a></td>
-                            {% else %}
-                            <td  class="text-left" style="width:50%; font-weight: 600;"><a id="edu-{{ notice.id }}">{{ notice.name|truncatechars:30 }}</a></td>
-                            {% endif %}
+                            <td class="text-left" style="width:50%; font-weight: 600;" onclick="location.href='/edu/{{ notice.id }}/'" ><a id="edu-{{ notice.id }}">{{ notice.name|truncatechars:30 }}</a></td>
                             <td style="font-weight: 500;">{{ notice.category }}</td>
                             <td style="font-weight: 500;"> &#8361; {{ notice.price }}</td>
                             <td style="font-weight: 500;">{{ notice.registered_date|date:'Y. m. d' }}</td>
-                            <td style="font-weight: 500;"><input id="edu-{{ notice.id }}" type="checkbox" name="selected" value="{{ notice.id }}"></td>
+                            <td style="font-weight: 500;"><input id="selected" type="checkbox" name="selected" value="{{ notice.id }}"></td>
                         </tr>
                         {% endfor %}
                     {% else %}
@@ -143,11 +138,12 @@
 </div>
 
 <script type="text/javascript">
-
-    function select(clicked_id){
-        const target = document.getElementById(clicked_id);
-        const box = target.getElementsByTagName("input")[0];
-        box.click();
+    target = window.location.search.split('&')[0].split('=')[1]
+    var type = document.getElementsByTagName('option')
+    for (var i = 0; i < 5; i++) {
+        if (type[i].value === target) {
+            type[i].setAttribute('selected', 'selected')
+        }
     }
 </script>
 {% endblock %}
