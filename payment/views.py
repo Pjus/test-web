@@ -13,6 +13,8 @@ import requests
 from users.decorators import *
 from .models import PurchasedItem
 
+from django.db.models import Q
+
 # Create your views here.
 @login_message_required
 def payment_view(request):
@@ -24,8 +26,6 @@ def payment_view(request):
         'cart' : cart_items,
     }
 
-    print(request.user)
-
     if request.method == "POST":
         URL = 'https://kapi.kakao.com/v1/payment/ready'
         headers = {
@@ -36,9 +36,9 @@ def payment_view(request):
             items = f'{cart_items[0].product.name}외 {len(cart_items)-1}건'
         else:
             items = cart_items[0].product.name
+
         quantity = [item.quantity for item in cart_items]
         total_amount = [item.product.price for item in cart_items]
-
         params = {
             "cid": "TC0ONETIME",    # 테스트용 코드
             "partner_order_id": cart.cart_id,     # 주문번호
@@ -51,6 +51,7 @@ def payment_view(request):
             "cancel_url": "http://127.0.0.1:8000/cart/",
             "fail_url": "http://127.0.0.1:8000/cart/",
         }
+        
 
         res = requests.post(URL, headers=headers, params=params)
         request.session['tid'] = res.json()['tid']      # 결제 승인시 사용할 tid를 세션에 저장
