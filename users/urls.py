@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name = 'users'
 
@@ -20,4 +22,4 @@ urlpatterns = [
     path('recovery/pw/auth/', views.auth_confirm_view, name='recovery_auth'),
     path('recovery/pw/reset/', views.auth_pw_reset_view, name='recovery_pw_reset'),
 
-]
+]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -18,7 +18,10 @@ from django.db.models import Q
 # Create your views here.
 @login_message_required
 def payment_view(request):
-    # current_site = request.build_absolute_uri()[:-16]
+    current_full_url = request.build_absolute_uri()
+    url_path = request.path
+    target_url = current_full_url.replace(url_path, '')
+    print(target_url)
     current_user = str(request.user)
     cart = Cart.objects.get(user=_cart_id(request))
     cart_items = CartItem.objects.filter(cart=cart, active=True)
@@ -42,14 +45,14 @@ def payment_view(request):
         params = {
             "cid": "TC0ONETIME",    # 테스트용 코드
             "partner_order_id": cart.cart_id,     # 주문번호
-            "partner_user_id": str(request.user),    # 유저 아이디
+            "partner_user_id": current_user,    # 유저 아이디
             "item_name": items,        # 구매 물품 이름
             "quantity": sum(quantity),                # 구매 물품 수량
             "total_amount": sum(total_amount),        # 구매 물품 가격
             "tax_free_amount": "0",         # 구매 물품 비과세
-            "approval_url": "http://127.0.0.1:8000/payment/kakaoPaySuccess/",
-            "cancel_url": "http://127.0.0.1:8000/cart/",
-            "fail_url": "http://127.0.0.1:8000/cart/",
+            "approval_url": f"{target_url}/payment/kakaoPaySuccess/",
+            "cancel_url": f"{target_url}/cart/",
+            "fail_url": f"{target_url}/cart/",
         }
         
 
