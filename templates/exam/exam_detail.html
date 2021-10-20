@@ -10,28 +10,30 @@
 <div class="container">
     <div class="row-mt-5">
         <div class="col-12">
-            <!--본문-->
             <div class="card" style="width: 100%;">
-                <!--제목,분류,작성일-->
                 <div class="card-header">
-                    <strong style="font-size: 18px;">{{ exam.title }}</strong>&nbsp;&nbsp;<span style="font-size: 18px; color: gray;">[시험]</span>
-                    <span style="float:right;">{{ exam.registered_date|date:'Y.m.d. H:i' }}</span>
+                    <strong style="font-size: 18px;">{{ exam.quiz_title }}</strong>&nbsp;&nbsp;<span style="font-size: 18px; color: gray;">[시험]</span>
+                    <span style="float:right;">{{ exam.category }}</span>
                 </div>
                 <div class="card-body" style="min-height: 400px; color:black;">
-                    <!--작성자, 조회수-->
-                    <div>
-                        <span><i class="fas fa-user-edit"></i>&nbsp;작성자 : {{ exam.writer }}</span>
-                    </div>
                     <hr>
-                    {% if exam.upload_files %}
-                    <div class="col-12 text-right">
-                        <span style="color: gray;">첨부파일 :&nbsp;</span>
-                        <a id="id_uploaded_file" href="{% url 'exam:exam_download' exam.id %}" >{{ exam.filename|truncatechars:25 }}</a>
-                    </div>
-                    {% endif %}
-                    <!--내용-->
                     <div>
-                        {{ exam.content | safe }}
+                        {% for quiz in quiz_list%}
+                            문제 {{ forloop.counter }}. {{ quiz.question }}
+                            <br>
+                            <input type="checkbox" class="radio" value="1" name="fooby[1]"> 보기1 : {{ quiz.op1 }}
+                            <br>
+                            <input type="checkbox" class="radio" value="1" name="fooby[1]"> 보기2 : {{ quiz.op2 }}
+                            <br>
+                            <input type="checkbox" class="radio" value="1" name="fooby[1]"> 보기3 : {{ quiz.op3 }}
+                            <br>
+                            <input type="checkbox" class="radio" value="1" name="fooby[1]"> 보기4 : {{ quiz.op4 }}
+                            <br>
+                            <input type="checkbox" class="radio" value="1" name="fooby[1]"> 보기5 : {{ quiz.op5 }}
+                            <br>
+                            <br>
+                            <br>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -78,6 +80,24 @@
     function delete_modal() {
         location.replace('/exam/{{ exam.id }}/delete/');
     }
+
+    // the selector will match all input controls of type :checkbox
+    // and attach a click event handler 
+    $("input:checkbox").on('click', function() {
+    // in the handler, 'this' refers to the box clicked on
+    var $box = $(this);
+    if ($box.is(":checked")) {
+        // the name of the box is retrieved using the .attr() method
+        // as it is assumed and expected to be immutable
+        var group = "input:checkbox[name='" + $box.attr("name") + "']";
+        // the checked state of the group/box on the other hand will change
+        // and the current value is retrieved using .prop() method
+        $(group).prop("checked", false);
+        $box.prop("checked", true);
+    } else {
+        $box.prop("checked", false);
+    }
+    });
 </script>
 
 {% endblock %}

@@ -109,9 +109,7 @@ def edu_detail_view(request, pk):
 @admin_required
 def edu_write_view(request):
     if request.method == "POST":
-        print(request.method)
         form = ProductWriteForm(request.POST)
-        user = request.session['user_id']
         
         if form.is_valid():
             notice = form.save(commit = False)
@@ -123,7 +121,6 @@ def edu_write_view(request):
             notice.save()
             return redirect('edu:edu_list')
     else:
-        print("write err")
         form = ProductWriteForm()
 
     return render(request, "edu/edu_write.html", {'form': form})

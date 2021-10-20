@@ -1,23 +1,26 @@
 from django import forms
-from .models import QuestionContents, QuesModel
+from .models import QuizContents, Quiz
 
 class addExamForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(addExamForm, self).__init__(*args, **kwargs)
-        self.fields['title'].label = '제목'
-        self.fields['title'].widget.attrs.update({
+        self.fields['quiz_title'].label = '제목'
+        self.fields['quiz_title'].widget.attrs.update({
             'placeholder': '제목을 입력해주세요.',
             'class': 'form-control',
             'id': 'form_title',
             'autofocus': True,
         })
-
+        self.fields['category'].label = '분류'
+        self.fields['category'].widget.attrs.update({
+            'placeholder': '분류를 입력해주세요.',
+            'autofocus': True,
+        })
     class Meta:
-        model = QuestionContents
-        fields = ['title', 'category']
+        model = QuizContents
+        fields = ['quiz_title', 'category']
 
-
-class addQuestionForm(forms.ModelForm):
+class addQuizForm(forms.ModelForm):
     class Meta:
-        model=QuesModel
+        model = Quiz
         fields="__all__"

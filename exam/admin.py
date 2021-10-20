@@ -2,25 +2,22 @@ from django.contrib import admin
 
 # Register your models here.
 # Register your models here.
-from .models import QuesModel, QuestionContents
+from .models import Quiz, QuizContents
 
-class QuestionContentsAdmin(admin.ModelAdmin):
+class QuizContentsAdmin(admin.ModelAdmin):
     list_display = (
-        'title', 
-        'writer',
-        'category',
-        'registered_date',
-        'passed'
-        )
-    search_fields = ('title', 'user', 'category', 'registered_date')
-
-class QuestionAdmin(admin.ModelAdmin):
-    list_display = (
-        'title', 
+        'quiz_title', 
         'category',
         )
-    search_fields = ('title', 'category')
+    search_fields = ('quiz_title', 'category')
+
+class QuizAdmin(admin.ModelAdmin):
+    list_display = (
+        'quiz_title', 
+        'category',
+        )
+    search_fields = ('quiz_title', 'category')
 
 # Register your models here.
-admin.site.register(QuesModel, QuestionAdmin)
-admin.site.register(QuestionContents, QuestionContentsAdmin)
+admin.site.register(Quiz, QuizAdmin)
+admin.site.register(QuizContents, QuizContentsAdmin)

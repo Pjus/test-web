@@ -48,7 +48,7 @@
 <div class="container">
     <div class="row mt-5">
         <div class="col-12">
-            <h4 style="font-weight: bold;">시험과목</h4>
+            <h4 style="font-weight: bold;">퀴즈생성</h4>
         </div>
     </div>
 
@@ -62,10 +62,31 @@
                     <div class="md-form form-group" style="margin-top: 8.5px;">
                         <div style="padding: 0 5.5px;">
                             <!-- <label for="form_title" class="control-label">{{ form.title.label }}</label> -->
-                            시험제목 : {{ QuizContentForm.quiz_title }}
+                            시험제목 : {{ QuizForm.quiz_title }}
                         </div>
                         <div>
-                            분류 : {{ QuizContentForm.category }}
+                            분류 : {{ QuizForm.category }}
+                        </div>
+                        <div>
+                            문제 : {{ QuizForm.question }}
+                        </div>
+                        <div>
+                            보기1 : {{ QuizForm.op1 }}
+                        </div>
+                        <div>
+                            보기2 : {{ QuizForm.op2 }}
+                        </div>
+                        <div>
+                            보기3 : {{ QuizForm.op3 }}
+                        </div>
+                        <div>
+                            보기4 : {{ QuizForm.op4 }}
+                        </div>
+                        <div>
+                            보기5 : {{ QuizForm.op5 }}
+                        </div>
+                        <div>
+                            정답 : {{ QuizForm.ans }}
                         </div>
                     </div>
                 </div>

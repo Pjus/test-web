@@ -1,55 +1,41 @@
-import os
 from django.db import models
+from django.db.models.fields import CharField
+from users.choice import *
 from django.conf import settings
 from django.db.models.deletion import SET_NULL
-from uuid import uuid4
-from datetime import datetime
-
-from users.choice import *
-
-def get_file_path(instance, filename):
-    ymd_path = datetime.now().strftime('%Y/%m/%d')
-    uuid_name = uuid4().hex
-    return ''.join(['upload_file/exam/', ymd_path, uuid_name])
 
 # Create your models here.
-class QuestionContents(models.Model):
-    title = models.CharField(max_length=128, verbose_name='제목', unique=True)
-    writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=SET_NULL, null=True, verbose_name='작성자')
-    category = models.CharField(choices=CATEGORY_CHOICES, max_length=128, verbose_name="분류", null=True)
-    registered_date = models.DateTimeField(auto_now_add=True, verbose_name='등록시간')
-    passed = models.BooleanField(default=False)
+
+class QuizContents(models.Model):
+    quiz_title = models.CharField(max_length=128, null=False, verbose_name="quiz_title")
+    category = models.CharField(choices=CATEGORY_CHOICES, max_length=128, verbose_name="분류")
+    cert = models.BooleanField(default=False, verbose_name="수료여부")
 
     def __str__(self):
-        return self.title
-
-    def delete(self, *args, **kargs):
-        if self.upload_files:
-            os.remove(os.path.join(settings.MEDIA_ROOT, self.upload_files.path))
-        super(QuestionContents, self).delete(*args, **kargs)
+        return self.quiz_title
 
     class Meta:
-        db_table = '시험과목'
-        verbose_name = '시험과목'
-        verbose_name_plural = '시험과목'
-        ordering = ["title"]
+        db_table = 'QuizContents'
+        verbose_name = 'QuizContents'
+        verbose_name_plural = 'QuizContents'
+        ordering = ["quiz_title"]
 
-
-class QuesModel(models.Model):
-    title = models.CharField(max_length=128, verbose_name='제목', unique=True)
+class Quiz(models.Model):
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=128, verbose_name="분류", null=True)
+    quiz_title = models.ForeignKey(QuizContents, on_delete=models.CASCADE, verbose_name="quiz_title")
     question = models.CharField(max_length=200,null=True)
     op1 = models.CharField(max_length=200,null=True)
     op2 = models.CharField(max_length=200,null=True)
     op3 = models.CharField(max_length=200,null=True)
     op4 = models.CharField(max_length=200,null=True)
+    op5 = models.CharField(max_length=200,null=True)
     ans = models.CharField(max_length=200,null=True)
     
     def __str__(self):
-        return self.title
+        return f'{self.quiz_title}'
     
     class Meta:
-        db_table = 'Questions'
-        verbose_name = 'Questions'
-        verbose_name_plural = 'Questions'
-        ordering = ["title"]
+        db_table = 'Quiz'
+        verbose_name = 'Quiz'
+        verbose_name_plural = 'Quiz'
+        ordering = ["quiz_title"]

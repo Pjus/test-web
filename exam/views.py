@@ -8,32 +8,33 @@ from datetime import datetime
 import exam
 from users.decorators import * 
 from .forms import *
+from .models import Quiz, QuizContents
 
 from django.shortcuts import render, get_object_or_404, redirect
 
 
 class ExamListView(ListView):
-    model = QuestionContents
+    model = QuizContents
     paginate_by = 10
     template_name = 'exam/exam_list.html'
-    context_object_name = 'notice_list' 
+    context_object_name = 'quiz_list' 
 
     def get_queryset(self):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '')
-        notice_list = QuestionContents.objects.order_by('id') 
+        quiz_list = QuizContents.objects.order_by('id') 
         if search_keyword :
             if len(search_keyword) > 1 :
                 if search_type == 'all':
-                    search_notice_list = notice_list.filter(Q (title__icontains=search_keyword) | Q (content__icontains=search_keyword) | Q (writer__user_id__icontains=search_keyword))
+                    search_quiz_list = quiz_list.filter(Q (title__icontains=search_keyword) | Q (content__icontains=search_keyword) | Q (writer__user_id__icontains=search_keyword))
                 elif search_type == 'title':
-                    search_notice_list = notice_list.filter(title__icontains=search_keyword)    
+                    search_quiz_list = quiz_list.filter(title__icontains=search_keyword)    
                 elif search_type == 'catagory':
-                    search_notice_list = notice_list.filter(catagory__icontains=search_keyword)    
-                return search_notice_list
+                    search_quiz_list = quiz_list.filter(catagory__icontains=search_keyword)    
+                return search_quiz_list
             else:
                 messages.error(self.request, '검색어는 2글자 이상 입력해주세요.')
-        return notice_list
+        return quiz_list
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -68,35 +69,48 @@ class ExamListView(ListView):
 @admin_required
 def exam_write_view(request):
     if request.method == "POST":
-        form = addExamForm(request.POST)
-        user = request.session['user_id']
-        user_id = User.objects.get(user_id = user)
-
-        if form.is_valid():
-            exam = form.save(commit = False)
-            exam.writer = user_id
+        QuizContentForm = addExamForm(request.POST)
+        if QuizContentForm.is_valid():
+            exam = QuizContentForm.save(commit = False)
             exam.save()
             return redirect('exam:exam_list')
     else:
-        form = addQuestionForm()
-    return render(request, "exam/exam_write.html", {'form': form})
+        QuizContentForm = addExamForm()
+    return render(request, "exam/exam_write.html", {'QuizContentForm': QuizContentForm})
+
+# 퀴즈등록
+@login_message_required
+@admin_required
+def quiz_write_view(request):
+    if request.method == "POST":
+        QuizForm = addQuizForm(request.POST)
+        print(QuizForm.is_valid())
+        if QuizForm.is_valid():
+            quiz = QuizForm.save(commit = False)
+            quiz.save()
+            return redirect('exam:exam_list')
+    else:
+        QuizForm = addQuizForm()
+    return render(request, "exam/quiz_write.html", {'QuizForm':QuizForm})
 
 
 @login_message_required
 def exam_detail_view(request, pk):
-    exam = get_object_or_404(QuestionContents, pk=pk)
+    exam = get_object_or_404(QuizContents, pk=pk)
+    title = exam
+    quizs = Quiz.objects.filter(quiz_title=title)
 
     context = {
         'exam': exam,
+        'quiz_list':quizs,
     }
-
     return render(request, 'exam/exam_detail.html', context)
 
 
 @login_message_required
 @admin_required
 def question_write_view(request, pk):
-    exam = QuestionContents.objects.get(id=pk)
+    exam = QuizContents.objects.get(id=pk)
     
     if request.method == "POST":
         if(exam.writer == request.user or request.user.level == '0'):
@@ -107,7 +121,7 @@ def question_write_view(request, pk):
                 messages.success(request, "수정되었습니다.")
                 return redirect('/exam/'+str(pk))
     else:
-        exam = QuestionContents.objects.get(id=pk)
+        exam = QuizContents.objects.get(id=pk)
         if exam.writer == request.user or request.user.level == '0':
             form = addExamForm(instance=exam)
             context = {
@@ -121,5 +135,5 @@ def question_write_view(request, pk):
 
 @login_message_required
 def exam_test_view(request, pk):
-    exam = QuestionContents.objects.get(id=pk)
+    exam = QuizContents.objects.get(id=pk)
     return render(request)
