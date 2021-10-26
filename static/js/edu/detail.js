@@ -37,9 +37,6 @@ function next_page() {
     const next_page_num = page_num + 1;
     if (next_page_num === img_list.length){
         alert("마지막 페이지 입니다.")
-        alert(start);
-
-
 
     } else {
         const new_src = img_list[next_page_num].value

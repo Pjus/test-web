@@ -16,9 +16,15 @@ class addExamForm(forms.ModelForm):
             'placeholder': '분류를 입력해주세요.',
             'autofocus': True,
         })
+
+        self.fields['product'].label = '교육'
+        self.fields['product'].widget.attrs.update({
+            'placeholder': '교육을 입력해주세요.',
+            'autofocus': True,
+        })
     class Meta:
         model = QuizContents
-        fields = ['quiz_title', 'category']
+        fields = ['quiz_title', 'category', 'product']
 
 class addQuizForm(forms.ModelForm):
     class Meta:

@@ -114,6 +114,7 @@ def logout_view(request):
 # 메인화면(로그인 후)
 @login_message_required
 def main_view(request):
+    
     context = {
     }
     return render(request, 'users/main.html', context)

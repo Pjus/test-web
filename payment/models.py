@@ -10,7 +10,7 @@ class PurchasedItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='상품명')
     registered_date = models.DateTimeField(auto_now_add=True, verbose_name='구매일')
     certificated = models.BooleanField(default=False, verbose_name="수료여부")
-    stayedTime = models.CharField(max_length=200, default='', null=True, verbose_name="머문시간")
+    stayedTime = models.CharField(max_length=200, default='0', null=True, verbose_name="머문시간")
 
     class Meta:
         ordering = ('registered_date', )

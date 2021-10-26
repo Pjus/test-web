@@ -1,0 +1,242 @@
+.blur-in {
+    -webkit-animation: blur 2s forwards;
+    -moz-animation: blur 2s forwards;
+    -o-animation: blur 2s forwards;
+    animation: blur 2s forwards;
+    pointer-events: none
+}
+
+
+.blur-out {
+    -webkit-animation: blur-out 2s forwards;
+    -moz-animation: blur-out 2s forwards;
+    -o-animation: blur-out 2s forwards;
+    animation: blur-out 2s forwards;
+}
+
+.popup-hidden {
+    visibility:hidden;
+}
+
+.popup-wrap {
+    background-color:rgba(0,0,0,.3); 
+    justify-content:center;
+    align-items:center;     
+    position:fixed;         
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;               
+    display:none; 
+    display:flex;
+    padding:15px; 
+}
+.popup{
+    width:100%;               
+    /* //반응형 이기 때문에 가로값은 100% */
+    max-width:400px;          
+    /* //팝업의 최대 크기지정 */
+    border-radius:10px;       
+    /* //둥글둥글한 디자인을 위해 각을 없앱니다. */
+    overflow:hidden;          
+    /* //각을 없앴을 때 내부 영역이 튀어나오는걸 방지 */
+    background-color:#d14040bb; 
+    /* //배경색 */
+    
+    /* 팝업이 허공에 떠있는 듯한 느낌을 주기 위한 그림자 효과. */
+    box-shadow: 5px 10px 10px 1px rgba(0,0,0,.3); 
+}
+
+.popup-head{
+    width:100%;
+    /* //부모요소를 따라가기 때문에 굳이 가로값을 주지 않아도 되지만 일부 ie에서 인식 못하는 문제가 있음 */
+    /* //헤드 영역 높이 */
+    height:50px;  
+    /* //로고 이미지나 텍스트를 중앙 정렬하기 위한 flex 및 정렬 */
+    display:flex; 
+    align-items:center;
+    justify-content:center;
+}
+
+.popup-body{               
+    width:100%;
+    background-color:#ffffff; 
+}
+.body-content{              
+    width:100%;
+    padding:30px;             
+}
+.body-titlebox{             
+    text-align:center;        
+    width:100%;
+    height:40px;
+    margin-bottom:10px;       
+}
+.body-contentbox{           
+    word-break:break-word;    
+    overflow-y:auto;          
+    min-height:100px;         
+    max-height:200px;         
+}
+
+
+.popup-foot{                      
+    width:100%;
+    height:50px;
+}
+.pop-btn{
+    display:inline-flex;            
+    width:50%;                      
+    height:100%;                    
+    justify-content:center;         
+    align-items:center;             
+    float:left;                     
+    color:#ffffff;                  
+    cursor:pointer;                 
+}
+.pop-btn.confirm{                 
+    border-right:1px solid #444242f2; 
+}
+@-webkit-keyframes blur {
+    0% {
+        -webkit-filter: blur(0px);
+        -moz-filter: blur(0px);
+        -o-filter: blur(0px);
+        -ms-filter: blur(0px);
+        filter: blur(0px);
+    }
+
+    100% {
+        -webkit-filter: blur(4px);
+        -moz-filter: blur(4px);
+        -o-filter: blur(4px);
+        -ms-filter: blur(4px);
+        filter: blur(4px);
+    }
+}
+
+@-moz-keyframes blur {
+    0% {
+        -webkit-filter: blur(0px);
+        -moz-filter: blur(0px);
+        -o-filter: blur(0px);
+        -ms-filter: blur(0px);
+        filter: blur(0px);
+    }
+
+    100% {
+        -webkit-filter: blur(4px);
+        -moz-filter: blur(4px);
+        -o-filter: blur(4px);
+        -ms-filter: blur(4px);
+        filter: blur(4px);
+    }
+}
+
+@-o-keyframes blur {
+    0% {
+        -webkit-filter: blur(0px);
+        -moz-filter: blur(0px);
+        -o-filter: blur(0px);
+        -ms-filter: blur(0px);
+        filter: blur(0px);
+    }
+
+    100% {
+        -webkit-filter: blur(4px);
+        -moz-filter: blur(4px);
+        -o-filter: blur(4px);
+        -ms-filter: blur(4px);
+        filter: blur(4px);
+    }
+}
+
+@keyframes blur {
+    0% {
+        -webkit-filter: blur(0px);
+        -moz-filter: blur(0px);
+        -o-filter: blur(0px);
+        -ms-filter: blur(0px);
+        filter: blur(0px);
+    }
+
+    100% {
+        -webkit-filter: blur(4px);
+        -moz-filter: blur(4px);
+        -o-filter: blur(4px);
+        -ms-filter: blur(4px);
+        filter: blur(4px);
+    }
+}
+
+@-webkit-keyframes blur-out {
+    0% {
+        -webkit-filter: blur(4px);
+        -moz-filter: blur(4px);
+        -o-filter: blur(4px);
+        -ms-filter: blur(4px);
+        filter: blur(4px);
+    }
+
+    100% {
+        -webkit-filter: blur(0px);
+        -moz-filter: blur(0px);
+        -o-filter: blur(0px);
+        -ms-filter: blur(0px);
+        filter: blur(0px);
+    }
+}
+
+@-moz-keyframes blur-out {
+    0% {
+        -webkit-filter: blur(4px);
+        -moz-filter: blur(4px);
+        -o-filter: blur(4px);
+        -ms-filter: blur(4px);
+        filter: blur(4px);
+    }
+
+    100% {
+        -webkit-filter: blur(0px);
+        -moz-filter: blur(0px);
+        -o-filter: blur(0px);
+        -ms-filter: blur(0px);
+        filter: blur(0px);
+    }
+}
+
+@-o-keyframes blur-out {
+    0% {
+        -webkit-filter: blur(4px);
+        -moz-filter: blur(4px);
+        -o-filter: blur(4px);
+        -ms-filter: blur(4px);
+        filter: blur(4px);
+    }
+
+    100% {
+        -webkit-filter: blur(0px);
+        -moz-filter: blur(0px);
+        -o-filter: blur(0px);
+        -ms-filter: blur(0px);
+        filter: blur(0px);
+    }
+}
+
+@keyframes blur-out {
+    0% {
+        -webkit-filter: blur(4px);
+        -moz-filter: blur(4px);
+        -o-filter: blur(4px);
+        -ms-filter: blur(4px);
+        filter: blur(4px);
+    }
+
+    100% {
+        -webkit-filter: blur(0px);
+        -moz-filter: blur(0px);
+        -o-filter: blur(0px);
+        -ms-filter: blur(0px);
+        filter: blur(0px);
+    }
+}

@@ -3,6 +3,7 @@ from django.db.models.fields import CharField
 from users.choice import *
 from django.conf import settings
 from django.db.models.deletion import SET_NULL
+from edu.models import Product
 
 # Create your models here.
 
@@ -10,6 +11,7 @@ class QuizContents(models.Model):
     quiz_title = models.CharField(max_length=128, null=False, verbose_name="quiz_title")
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=128, verbose_name="분류")
     cert = models.BooleanField(default=False, verbose_name="수료여부")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='상품명', default='')
 
     def __str__(self):
         return self.quiz_title

@@ -134,6 +134,18 @@ def question_write_view(request, pk):
             return redirect('/exam/'+str(pk))
 
 @login_message_required
-def exam_test_view(request, pk):
-    exam = QuizContents.objects.get(id=pk)
-    return render(request)
+def exam_test_view(request):
+    return render(request, 'exam/test.html')
+
+@login_message_required
+def exam_submit_view(request, pk):
+    exam = get_object_or_404(QuizContents, pk=pk)
+    title = exam
+    quizs = Quiz.objects.filter(quiz_title=title)
+
+    context = {
+        'exam': exam,
+        'quiz_list':quizs,
+        'passed':'',
+    }
+    return render(request, 'exam/exam_detail.html', context)
