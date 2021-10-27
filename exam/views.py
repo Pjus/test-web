@@ -9,9 +9,10 @@ import exam
 from users.decorators import * 
 from .forms import *
 from .models import Quiz, QuizContents
-
+from payment.models import PurchasedItem
 from django.shortcuts import render, get_object_or_404, redirect
 
+import json
 
 class ExamListView(ListView):
     model = QuizContents
@@ -95,19 +96,6 @@ def quiz_write_view(request):
 
 
 @login_message_required
-def exam_detail_view(request, pk):
-    exam = get_object_or_404(QuizContents, pk=pk)
-    title = exam
-    quizs = Quiz.objects.filter(quiz_title=title)
-
-    context = {
-        'exam': exam,
-        'quiz_list':quizs,
-    }
-    return render(request, 'exam/exam_detail.html', context)
-
-
-@login_message_required
 @admin_required
 def question_write_view(request, pk):
     exam = QuizContents.objects.get(id=pk)
@@ -149,3 +137,40 @@ def exam_submit_view(request, pk):
         'passed':'',
     }
     return render(request, 'exam/exam_detail.html', context)
+
+
+
+
+
+@login_message_required
+def exam_detail_view(request, pk):
+    exam = get_object_or_404(QuizContents, pk=pk)
+    title = exam
+    quizs = Quiz.objects.filter(quiz_title=title)
+
+    context = {
+        'exam': exam,
+        'quiz_list':quizs,
+    }
+    return render(request, 'exam/exam_detail.html', context)
+
+
+@login_message_required
+def exam_submit_view(request, pk):
+    purchased = PurchasedItem.objects.filter(user=request.user)
+    exam = get_object_or_404(QuizContents, pk=pk)
+    title = exam
+    quizs = Quiz.objects.filter(quiz_title=title)
+
+    jsonObject = json.loads(request.body,  encoding="UTF-8")
+
+    answers = {}
+    for quiz in quizs:
+        answers[quiz.question] = quiz.ans
+    
+    if jsonObject == answers:
+        if purchased.product.name == exam.product.name:
+            purchased.certificated = True
+    else:
+        pass
+
