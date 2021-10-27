@@ -132,7 +132,6 @@ function next_page() {
     const next_page_num = page_num + 1;
     if (next_page_num === img_list.length){
         alert("마지막 페이지 입니다.")
-        sendStayedTimeToDB()
 
     } else {
         const new_src = img_list[next_page_num].value
@@ -142,14 +141,16 @@ function next_page() {
 }
 document.addEventListener('keydown', function(event) {
 if(event.keyCode == 37) {
-    prev_page();
     makeJson();
+    prev_page();
     timeCheck();
+    sendStayedTimeToDB()
 }
 else if(event.keyCode == 39) {
-    next_page();
     makeJson();
+    next_page();
     timeCheck();
+    sendStayedTimeToDB()
 }
 
 function timeCheck(){
@@ -207,7 +208,6 @@ function sendStayedTimeToDB(){
         data: JSON.stringify(stayedGapList),
         success: function (data) {
             // any process in data
-            alert("successfull")
             console.log(stayedGapList)
         },
         failure: function () {

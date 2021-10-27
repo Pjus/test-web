@@ -181,11 +181,10 @@
         headers: {
             'X-CSRFTOKEN' : '{{ csrf_token }}'
         },
-        url: "/edu/{{ notice.id }}/savetime/",
+        url: "/exam/{{ notice.id }}/savetime/",
         data: JSON.stringify(stayedGapList),
         success: function (data) {
             // any process in data
-            alert("successfull")
             console.log(stayedGapList)
         },
         failure: function () {

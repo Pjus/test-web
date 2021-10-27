@@ -250,7 +250,7 @@ def saveTime(request, pk):
                 item.stayedTime = jsonObject
                 item.save()
             else:
-                for page in item.stayedTime:
+                for page in jsonObject:
                     mysum = datetime.timedelta()
                     exist_time = item.stayedTime[page]
                     new_time = jsonObject[page]
