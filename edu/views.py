@@ -3,6 +3,8 @@ import urllib
 import os
 import mimetypes
 import natsort
+import json
+import datetime
 
 from django.conf import settings
 from django.views.generic import ListView
@@ -180,8 +182,6 @@ def edu_download_view(request, pk):
 
 
 
-
-
 class StudyListView(ListView):
     model = PurchasedItem
     products = Product
@@ -237,3 +237,29 @@ class StudyListView(ListView):
         context['type'] = search_type
 
         return context
+
+@login_message_required
+def saveTime(request, pk):
+    products = Product.objects.get(id=pk)
+    jsonObject = json.loads(request.body,  encoding="UTF-8")
+    # print(jsonObject)
+    purchased = PurchasedItem.objects.filter(user=request.user)
+    for item in purchased:
+        if item.product.name == products.name:
+            if item.stayedTime == {}: 
+                item.stayedTime = jsonObject
+                item.save()
+            else:
+                for page in item.stayedTime:
+                    mysum = datetime.timedelta()
+                    exist_time = item.stayedTime[page]
+                    new_time = jsonObject[page]
+                    (h1, m1, s1) = exist_time.split(':')
+                    (h2, m2, s2) = new_time.split(':')
+                    d1 = datetime.timedelta(hours=int(h1), minutes=int(m1), seconds=int(s1))
+                    d2 = datetime.timedelta(hours=int(h2), minutes=int(m2), seconds=int(s2))
+                    total = d1 + d2
+                    mysum += total
+                    item.stayedTime[page] = str(mysum)
+                    item.save()
+    return render(request, 'edu/study_list.html')

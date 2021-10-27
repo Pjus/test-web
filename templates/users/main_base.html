@@ -11,6 +11,9 @@
     
     <!-- JQuery -->
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <!-- ajax -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
     {% block header %}
     {% endblock %}
     <!-- JQuery Cookie-->
@@ -185,10 +188,10 @@
                                 <a class="nav-link" href="/"  style="font-weight: 600;">HOME</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'edu:edu_list' %}"  style="font-weight: 600;">구입</a>
+                                <a class="nav-link" href="{% url 'edu:edu_list' %}"  style="font-weight: 600;">교육구입</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'edu:edu_list' %}"  style="font-weight: 600;">수강</a>
+                                <a class="nav-link" href="{% url 'edu:study_list' %}"  style="font-weight: 600;">교육수강</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'exam:exam_list' %}"  style="font-weight: 600;">시험</a>

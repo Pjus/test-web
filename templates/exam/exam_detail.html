@@ -24,7 +24,7 @@
                         </div>
                         <br>
                         <form name="quiz_form" id="questions" onsubmit="return score()">
-                            {% for quiz in quiz_list%}
+                            {% for quiz in quiz_list %}
                             <div class="question">
                                 문제 {{ forloop.counter }}. {{ quiz.question }}
                                 <br>
@@ -52,11 +52,11 @@
             <div class="text-right" style="margin-top:-15px;">
                 {% if exam_auth or request.user.level == '0' %}
                 <button class="btn btn-sm" id="detail_btn" onclick="location.href='/exam/{{ exam.id }}/edit/'">문제추가</button>
-                <button class="btn btn-sm" id="detail_btn" onclick="location.href='/exam/submit'">제출하기</button>
+                <button class="btn btn-sm" id="detail_btn" data-toggle="modal" data-target="#submit_modal">제출하기</button>
                 <button class="btn btn-sm" id="detail_btn" data-toggle="modal" data-target="#delete_modal">삭제</button>
                 <button class="btn btn-sm" id="detail_btn" onclick="location.href='/exam/'">목록으로</button>
                 {% else %}
-                <button class="btn btn-sm" id="detail_btn" onclick="location.href='/exam/'">제출하기</button>
+                <button class="btn btn-sm" id="detail_btn" data-toggle="modal" data-target="#submit_modal">제출하기</button>
                 <button class="btn btn-sm" id="detail_btn" onclick="location.href='/exam/'">목록으로</button>
                 {% endif %}
             </div>
@@ -82,6 +82,26 @@
             </div>
         </div>
     </div>
+    
+    <div id="submit_modal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">제출</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>제출하시겠습니까?</p>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="submit_modal()" type="button" class="btn btn-dark">제출하기</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">취소하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- //컨테이너 -->
@@ -98,10 +118,10 @@
             <div class="popup-body">	
                 <div class="body-content">
                     <div class="body-titlebox">
-                    <h1>결과</h1>
+                    <h1 class="result">결과</h1>
                     </div>
                     <div class="body-contentbox">
-                    <p> 모달 내용칸 </p>
+                        <p> 모달 내용칸 </p>
                     </div>
                 </div>
             </div>
@@ -149,10 +169,30 @@
     $("#close").click(function(){
         modalClose(); //모달 닫기 함수 호출
     });
+
     function modalClose(){
         $("#popup").fadeOut(); //페이드아웃 효과
     }
     });
+
+    function submit_modal(){
+    $.ajax({
+        type: "POST",
+        headers: {
+            'X-CSRFTOKEN' : '{{ csrf_token }}'
+        },
+        url: "/edu/{{ notice.id }}/savetime/",
+        data: JSON.stringify(stayedGapList),
+        success: function (data) {
+            // any process in data
+            alert("successfull")
+            console.log(stayedGapList)
+        },
+        failure: function () {
+            alert("failure");
+        }
+    });
+}
 </script>
 
 {% endblock %}

@@ -37,6 +37,7 @@ function next_page() {
     const next_page_num = page_num + 1;
     if (next_page_num === img_list.length){
         alert("마지막 페이지 입니다.")
+        sendStayedTimeToDB()
 
     } else {
         const new_src = img_list[next_page_num].value
@@ -97,3 +98,22 @@ function drawTime(){
     }
 }
 });
+
+function sendStayedTimeToDB(){
+    alert(window.location.pathname + 'savetime')
+    $.ajax({
+        type: "GET",
+        url: "{% url 'edu_save' %}",
+        data: {
+            "result": stayedGapList,
+        },
+        dataType: "json",
+        success: function (data) {
+            // any process in data
+            alert("successfull")
+        },
+        failure: function () {
+            alert("failure");
+        }
+    });
+}

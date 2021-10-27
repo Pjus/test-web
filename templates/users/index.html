@@ -67,10 +67,10 @@
                       <a class="nav-link" href="{% url 'index' %}"  style="font-weight: 600;">HOME</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'edu:edu_list' %}"  style="font-weight: 600;">교육</a>
+                        <a class="nav-link" href="{% url 'edu:edu_list' %}"  style="font-weight: 600;">교육구입</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="{% url 'edu:edu_list' %}"  style="font-weight: 600;">수강</a>
+                      <a class="nav-link" href="{% url 'edu:study_list' %}"  style="font-weight: 600;">교육수강</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'exam:exam_list' %}"  style="font-weight: 600;">시험</a>
@@ -93,7 +93,7 @@
         <div class="row align-items-center text-center justify-content-center">
           <div class="col-md-8">
            
-            <h1 class="font-weight-bold"><a class="edu" href="#" style="color: azure;">재범방지교육</a></h1>
+            <h1 class="font-weight-bold"><a class="edu" href="#" style="color: azure;">TEST</a></h1>
             <p class="sub-text mb-4 d-block">TEST 홈페이지</p>
 
             {% if user.is_authenticated %}
