@@ -48,26 +48,22 @@ function next_page() {
 document.addEventListener('keydown', function(event) {
 if(event.keyCode == 37) {
     prev_page();
-    timeCheck();
 }
 else if(event.keyCode == 39) {
     next_page();
-    timeCheck();
 }
 
 function timeCheck(){
     const today = new Date();
-    const hours = today.getHours();
-    const minits = today.getMinutes();
-    const seconds = today.getSeconds();
+    const hours = String(today.getHours()).padStart(2, "0");
+    const minits = String(today.getMinutes()).padStart(2, "0");
+    const seconds = String(today.getSeconds()).padStart(2, "0");
     current = `${hours}:${minits}:${seconds}`;
     stayedList.push(current);
-    if(stayedList.length > 1){
-        stayed = formatTime(timestrToSec(stayedList[stayedList.length - 1]) - timestrToSec(stayedList[stayedList.length - 2]));
-        stayedGapList.push(stayed);
-        start += timestrToSec(stayed)
+    stayed = formatTime(timestrToSec(stayedList[stayedList.length - 1]) - timestrToSec(stayedList[stayedList.length - 2]));
+    stayedGapList.push(stayed);
+    start += timestrToSec(stayed)
 
-    }
 }
 
 function timestrToSec(timestr) {

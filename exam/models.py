@@ -12,6 +12,7 @@ class QuizContents(models.Model):
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=128, verbose_name="분류")
     cert = models.BooleanField(default=False, verbose_name="수료여부")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='상품명', default='')
+    num_exam = models.IntegerField(default=3, verbose_name="응시기회") 
 
     def __str__(self):
         return self.quiz_title

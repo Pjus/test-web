@@ -6,13 +6,14 @@ from django.conf.urls.static import static
 app_name = 'exam'
 
 urlpatterns = [
-    path('test/', views.exam_test_view, name='exam_test'),
+    # path('test/', views.exam_test_view, name='exam_test'),
 
 
     path('', views.ExamListView.as_view(), name='exam_list'),
+    path('<int:pk>/', views.exam_detail_view, name='exam_detail'),
+
     path('write/', views.exam_write_view, name='exam_write'),
     path('quiz/', views.quiz_write_view, name='quiz_write'),
-    path('<int:pk>/', views.exam_detail_view, name='exam_detail'),
     path('<int:pk>/edit/', views.question_write_view, name='question_write'),
     path('<int:pk>/submit/', views.exam_submit_view, name='exam_submit'),
 

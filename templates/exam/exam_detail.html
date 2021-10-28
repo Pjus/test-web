@@ -8,6 +8,7 @@
 {% block contents %}
 <link rel="stylesheet" href="{% static 'css/quiz/score.css' %}">
 <script src="{% static 'js/exam/quiz.js' %}"></script>
+
 <br><br><br>
 <div class="container">
     <div class="row-mt-5">
@@ -23,26 +24,29 @@
                         <div id="quiz-time-left">
                         </div>
                         <br>
-                        <form name="quiz_form" id="questions" onsubmit="return score()">
-                            {% for quiz in quiz_list %}
-                            <div class="question">
-                                문제 {{ forloop.counter }}. {{ quiz.question }}
+                        <form name="quiz_form" id="questions"  method="post">
+                            <tbody>
+                                {% for quiz in quiz_list %}
+                                <div class="question">
+                                    문제 {{ forloop.counter }}. {{ quiz.question }}
+                                    <br>
+                                    <tr class="text-center" style="cursor:pointer;" id="quiz-{{ quiz.id }}">
+                                        <td style="font-weight: 500;"><label for="{{ quiz.id }}-1" style="cursor: pointer;"><input id="{{ quiz.id }}-1" type="checkbox" class="quiz" value="{{ quiz.op1 }}" name="quiz[{{ forloop.counter }}]"> 보기1 : {{ quiz.op1 }}</label></td>
+                                        <br>
+                                        <td style="font-weight: 500;"><label for="{{ quiz.id }}-2" style="cursor: pointer;"><input id="{{ quiz.id }}-2" type="checkbox" class="quiz" value="{{ quiz.op2 }}" name="quiz[{{ forloop.counter }}]"> 보기2 : {{ quiz.op2 }}</label></td>
+                                        <br>
+                                        <td style="font-weight: 500;"><label for="{{ quiz.id }}-3" style="cursor: pointer;"><input id="{{ quiz.id }}-3" type="checkbox" class="quiz" value="{{ quiz.op3 }}" name="quiz[{{ forloop.counter }}]"> 보기3 : {{ quiz.op3 }}</label></td>
+                                        <br>
+                                        <td style="font-weight: 500;"><label for="{{ quiz.id }}-4" style="cursor: pointer;"><input id="{{ quiz.id }}-4" type="checkbox" class="quiz" value="{{ quiz.op4 }}" name="quiz[{{ forloop.counter }}]"> 보기4 : {{ quiz.op4 }}</label></td>
+                                        <br>
+                                        <td style="font-weight: 500;"><label for="{{ quiz.id }}-5" style="cursor: pointer;"><input id="{{ quiz.id }}-5" type="checkbox" class="quiz" value="{{ quiz.op5 }}" name="quiz[{{ forloop.counter }}]"> 보기5 : {{ quiz.op5 }}</label></td>
+                                    </tr>
+                                </div>
                                 <br>
-                                <input type="checkbox" class="radio" value="1" name="fooby[{{ forloop.counter }}]"> 보기1 : {{ quiz.op1 }}
                                 <br>
-                                <input type="checkbox" class="radio" value="1" name="fooby[{{ forloop.counter }}]"> 보기2 : {{ quiz.op2 }}
-                                <br>
-                                <input type="checkbox" class="radio" value="1" name="fooby[{{ forloop.counter }}]"> 보기3 : {{ quiz.op3 }}
-                                <br>
-                                <input type="checkbox" class="radio" value="1" name="fooby[{{ forloop.counter }}]"> 보기4 : {{ quiz.op4 }}
-                                <br>
-                                <input type="checkbox" class="radio" value="1" name="fooby[{{ forloop.counter }}]"> 보기5 : {{ quiz.op5 }}
-                                <br>
-                                <br>
-                                <br>
-                            </div>
+                                {% endfor %}
+                            </tbody>
 
-                            {% endfor %}
                         </form>
                     </div>
                 </div>
@@ -52,11 +56,11 @@
             <div class="text-right" style="margin-top:-15px;">
                 {% if exam_auth or request.user.level == '0' %}
                 <button class="btn btn-sm" id="detail_btn" onclick="location.href='/exam/{{ exam.id }}/edit/'">문제추가</button>
-                <button class="btn btn-sm" id="detail_btn" data-toggle="modal" data-target="#submit_modal">제출하기</button>
+                <button class="btn btn-sm" id="submit_btn" data-toggle="modal" data-target="#submit_modal">제출하기</button>
                 <button class="btn btn-sm" id="detail_btn" data-toggle="modal" data-target="#delete_modal">삭제</button>
                 <button class="btn btn-sm" id="detail_btn" onclick="location.href='/exam/'">목록으로</button>
                 {% else %}
-                <button class="btn btn-sm" id="detail_btn" data-toggle="modal" data-target="#submit_modal">제출하기</button>
+                <button class="btn btn-sm" id="submit_btn" data-toggle="modal" data-target="#submit_modal">제출하기</button>
                 <button class="btn btn-sm" id="detail_btn" onclick="location.href='/exam/'">목록으로</button>
                 {% endif %}
             </div>
@@ -76,7 +80,7 @@
                     <p>게시글을 삭제하시겠습니까?</p>
                 </div>
                 <div class="modal-footer">
-                    <button onclick="delete_modal()" type="button" class="btn btn-dark">삭제하기</button>
+                    <button onclick="submit_modal()" type="button" class="btn btn-dark">삭제하기</button>
                     <button type="button" class="btn btn-light" data-dismiss="modal">취소하기</button>
                 </div>
             </div>
@@ -104,36 +108,6 @@
     </div>
 </div>
 
-<!-- //컨테이너 -->
-<div id="popup" class="container popup-hidden"> 
-    <!-- //모달을 감쌀 박스 -->
-    <div class="popup-wrap" id="popup"> 
-        <!-- //실질적 모달팝업 -->
-        <div class="popup">	
-            <!-- //로고 영역 -->
-            <div class="popup-head">	
-                <span class="head-title">BYTHEM</span>
-            </div>
-            <!-- //컨텐츠 영역 -->
-            <div class="popup-body">	
-                <div class="body-content">
-                    <div class="body-titlebox">
-                    <h1 class="result">결과</h1>
-                    </div>
-                    <div class="body-contentbox">
-                        <p> 모달 내용칸 </p>
-                    </div>
-                </div>
-            </div>
-        <div class="popup-foot">
-          <span class="pop-btn confirm" id="confirm">확인</span>
-          <span class="pop-btn" id="confirm">수료증 출력</span>
-        </div>
-      </div>
-     </div>
-</div>
-
-
 <script type="text/javascript">
 
     // the selector will match all input controls of type :checkbox
@@ -154,44 +128,57 @@
     }
     });
 
+    // function submit_modal() {
+    //     location.replace('/exam/{{ exam.product.id }}/submit');
+    // }
 
-
-    $(function(){
-    $("#confirm").click(function(){
-        modalClose(); //모달 닫기 함수 호출
-        
-        //컨펌 이벤트 처리
-    });
-    $("#modal-open").click(function(){        
-        $("#popup").css('display','flex').hide().fadeIn();
-        //팝업을 flex속성으로 바꿔준 후 hide()로 숨기고 다시 fadeIn()으로 효과
-    });
-    $("#close").click(function(){
-        modalClose(); //모달 닫기 함수 호출
-    });
-
-    function modalClose(){
-        $("#popup").fadeOut(); //페이드아웃 효과
-    }
-    });
+    // function closeIt()
+    // {
+    // return "Any string value here forces a dialog box to \n" + 
+    //         "appear before closing the window.";
+    // }
+    // window.onbeforeunload = closeIt;
 
     function submit_modal(){
-    $.ajax({
-        type: "POST",
-        headers: {
-            'X-CSRFTOKEN' : '{{ csrf_token }}'
-        },
-        url: "/exam/{{ notice.id }}/savetime/",
-        data: JSON.stringify(stayedGapList),
-        success: function (data) {
-            // any process in data
-            console.log(stayedGapList)
-        },
-        failure: function () {
-            alert("failure");
+        answers = {}
+        let userAnsCunt = 0;
+        const questions = document.getElementsByClassName('question');
+        const user_ans = document.getElementsByClassName('quiz');
+        for (let i=0, n=user_ans.length; i<n; i++) 
+        {
+            if (user_ans[i].checked) 
+            {
+                userAnsCunt += 1;
+                const quiz = user_ans[i].id.split('-')[0]
+                answers[quiz] = user_ans[i].value
+                console.log(answers);
+            }
         }
-    });
-}
-</script>
+        console.log(userAnsCunt);
+        console.log(questions.length);
+
+        if(userAnsCunt !== questions.length){
+            alert("모든 문항에 답해주십시오.")
+        }else{
+            $.ajax({
+            type: "POST",
+            headers: {
+                'X-CSRFTOKEN' : '{{ csrf_token }}'
+            },
+            url: "/exam/{{ exam.product.id }}/submit/",
+            data: JSON.stringify(answers),
+            success: function (data) {
+                // any process in data
+                // pass
+            },
+            failure: function () {
+                alert("failure");
+            }
+            });
+        }
+
+
+    }
+    </script>
 
 {% endblock %}

@@ -1,3 +1,4 @@
+from django.db.models.query import prefetch_related_objects
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import View, ListView
@@ -110,7 +111,7 @@ def question_write_view(request, pk):
                 return redirect('/exam/'+str(pk))
     else:
         exam = QuizContents.objects.get(id=pk)
-        if exam.writer == request.user or request.user.level == '0':
+        if request.user.level == '0':
             form = addExamForm(instance=exam)
             context = {
                 'form': form,
@@ -126,8 +127,8 @@ def exam_test_view(request):
     return render(request, 'exam/test.html')
 
 @login_message_required
-def exam_submit_view(request, pk):
-    exam = get_object_or_404(QuizContents, pk=pk)
+def exam_submit_view(request, name):
+    exam = get_object_or_404(QuizContents, name=name)
     title = exam
     quizs = Quiz.objects.filter(quiz_title=title)
 
@@ -140,11 +141,10 @@ def exam_submit_view(request, pk):
 
 
 
-
-
 @login_message_required
 def exam_detail_view(request, pk):
-    exam = get_object_or_404(QuizContents, pk=pk)
+    print(request.session)
+    exam = get_object_or_404(QuizContents, product_id=pk)
     title = exam
     quizs = Quiz.objects.filter(quiz_title=title)
 
@@ -157,20 +157,51 @@ def exam_detail_view(request, pk):
 
 @login_message_required
 def exam_submit_view(request, pk):
-    purchased = PurchasedItem.objects.filter(user=request.user)
-    exam = get_object_or_404(QuizContents, pk=pk)
+    score = 0
+    real_ans = {}
+    exam = QuizContents.objects.get(product_id=pk)
     title = exam
     quizs = Quiz.objects.filter(quiz_title=title)
 
-    jsonObject = json.loads(request.body,  encoding="UTF-8")
-
-    answers = {}
     for quiz in quizs:
-        answers[quiz.question] = quiz.ans
+        real_ans[str(quiz.id)] = quiz.ans
+    users_ans = json.loads(request.body,  encoding="UTF-8")
+    print(real_ans)
+    print(users_ans)
+
+    for question, answer in real_ans.items():
+        if users_ans[question] == answer:
+            score += 20
+
+    purchaseds = PurchasedItem.objects.filter(user=request.user)
+    for item in purchaseds:
+        if item.product.id == pk:
+            if item.certificated == False:
+                if score >= 60:
+                    print('cert')
+                    certificated = True
+                    item.certificated = certificated
+                    # item.save()
+                else:
+                    print('Failed')
+                    certificated = False
+
+
+    context = {
+        'score' : score,
+        'certificated' : certificated,
+
+
+    }
+    return render(request, 'exam/exam_result.html', context)
+
+    # answers = {}
+    # for quiz in quizs:
+    #     answers[quiz.question] = quiz.ans
     
-    if jsonObject == answers:
-        if purchased.product.name == exam.product.name:
-            purchased.certificated = True
-    else:
-        pass
+    # if jsonObject == answers:
+    #     if purchased.product.name == exam.product.name:
+    #         purchased.certificated = True
+    # else:
+    #     pass
 

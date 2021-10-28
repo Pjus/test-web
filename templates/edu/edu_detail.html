@@ -58,10 +58,7 @@
                 {% if request.user.level == '0' %}
                 <button class="btn btn-sm" id="detail_btn" onclick="location.href='/edu/{{ notice.id }}/edit/'">수정</button>
                 <button class="btn btn-sm" id="detail_btn" data-toggle="modal" data-target="#delete_modal">삭제</button>
-                <button class="btn btn-sm" id="detail_btn" onclick="location.href='/cart/add/{{ notice.id }}'">시험보기</button>
-                <button class="btn btn-sm" id="detail_btn" onclick="location.href='/edu/'">목록으로</button>
-                {% else %}
-                <button class="btn btn-sm" id="detail_btn" onclick="location.href='/cart/add/{{ notice.id }}'">시험보기</button>
+                <button class="btn btn-sm" id="detail_btn" data-toggle="modal" data-target="#exam_modal">시험보기</button>
                 <button class="btn btn-sm" id="detail_btn" onclick="location.href='/edu/'">목록으로</button>
                 {% endif %}
             </div>
@@ -81,9 +78,31 @@
                     <p>게시글을 삭제하시겠습니까?</p>
                 </div>
                 <div class="modal-footer">
-                    <button onclick="delete_modal()" type="button" class="btn btn-dark">삭제하기</button>
+                    <button onclick=delete_modal(); type="button" class="btn btn-dark">삭제하기</button>
                     <button type="button" class="btn btn-light" data-dismiss="modal">취소하기</button>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button class="btn btn-sm" id="exam_btn" data-toggle="modal" data-target="#exam_modal" style="visibility: hidden;">시험응시</button>
+
+<div id="exam_modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">알림창</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>시험응시 하시겠습니까?</p>
+            </div>
+            <div class="modal-footer">
+                <button onclick="location.href='/exam/{{ notice.id }}/'" type="button" class="btn btn-dark">시험보기</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">취소하기</button>
             </div>
         </div>
     </div>
@@ -95,18 +114,17 @@ const hours = today.getHours();
 const minits = today.getMinutes();
 const seconds = today.getSeconds();
 
-const stayedList = [`${hours}:${minits}:${seconds}`];
-const stayedGapList = new Object;
+let initial_time = `${hours}:${minits}:${seconds}`;
 
+const stayedGapList = new Object;
 
 const img_list = document.getElementsByName("imgList");
 const img = document.getElementById('img_content');
 let page_num = parseInt(document.getElementById('page_num').value);
 
-
-
-let start = 0;
-
+for(let i=0; i < img_list.length + 1; i++){
+    stayedGapList[i] = "00:00:00"
+}
 
 $(document).ready(function () {
     $('img').css('width', '100%');
@@ -125,14 +143,13 @@ function prev_page() {
         img.src = new_src
         page_num = prev_page_num
     }
-
 }
 
 function next_page() {
     const next_page_num = page_num + 1;
     if (next_page_num === img_list.length){
-        alert("마지막 페이지 입니다.")
-
+        const button = document.getElementById('exam_btn');
+        button.click();
     } else {
         const new_src = img_list[next_page_num].value
         img.src = new_src
@@ -141,33 +158,13 @@ function next_page() {
 }
 document.addEventListener('keydown', function(event) {
 if(event.keyCode == 37) {
-    makeJson();
     prev_page();
-    timeCheck();
-    sendStayedTimeToDB()
+
 }
 else if(event.keyCode == 39) {
-    makeJson();
     next_page();
-    timeCheck();
-    sendStayedTimeToDB()
-}
+}})
 
-function timeCheck(){
-    const today = new Date();
-    const hours = today.getHours();
-    const minits = today.getMinutes();
-    const seconds = today.getSeconds();
-    current = `${hours}:${minits}:${seconds}`;
-    console.log(current)
-    stayedList.push(current);
-    if(stayedList.length > 1){
-        stayed = formatTime(timestrToSec(stayedList[stayedList.length - 1]) - timestrToSec(stayedList[stayedList.length - 2]));
-        stayedGapList[page_num] += stayed;
-        start += timestrToSec(stayed)
-
-    }
-}
 
 function timestrToSec(timestr) {
     var parts = timestr.split(":");
@@ -185,7 +182,7 @@ function pad(num) {
 }
 
 function formatTime(seconds) {
-    return [Math.floor(seconds/3600),
+    return [pad(Math.floor(seconds/3600)),
             pad(Math.floor(seconds/60)%60),
             pad(seconds%60),
             ].join(":");
@@ -196,9 +193,22 @@ function drawTime(){
             document.querySelector('div#stayed').innerHTML = `누적시간 : ${start}초`;
     }
 }
-});
 
-function sendStayedTimeToDB(){
+function timeCheck(){
+    const today = new Date();
+    const hours = today.getHours();
+    const minits = today.getMinutes();
+    const seconds = today.getSeconds();
+    current = `${hours}:${minits}:${seconds}`;
+    stayed = formatTime(timestrToSec(current) - timestrToSec(initial_time));
+    initial_time = current
+    console.log(initial_time)
+    console.log(current)
+    console.log(stayed)
+
+    stayedGapList[page_num] = formatTime(timestrToSec(stayedGapList[page_num]) + timestrToSec(stayed));
+    console.log(stayedGapList)
+
     $.ajax({
         type: "POST",
         headers: {
@@ -208,7 +218,7 @@ function sendStayedTimeToDB(){
         data: JSON.stringify(stayedGapList),
         success: function (data) {
             // any process in data
-            console.log(stayedGapList)
+            // pass
         },
         failure: function () {
             alert("failure");
@@ -216,15 +226,7 @@ function sendStayedTimeToDB(){
     });
 }
 
-function makeJson() {
-    
-    if (stayedGapList.page_num){
-        //pass
-    }else{
-        stayedGapList[page_num] = 0
-    }
-
-}
+setInterval(timeCheck, 1000);
 </script>
 
 {% endblock %}

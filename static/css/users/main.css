@@ -8380,6 +8380,15 @@ a[data-toggle="collapse"] {
   margin-left: -0.5px; */
 }
 
+#submit_btn {
+  background-color: #d14040f2;
+  color: white;
+  font-size: 14px;
+  /* height: 38px; */
+  /* margin-top: 10px;
+  margin-left: -0.5px; */
+}
+
 #back_btn {
   background-color: gray;
   color: white;

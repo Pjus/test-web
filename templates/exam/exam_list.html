@@ -44,7 +44,7 @@
             <tbody>
                 {% if quiz_list %}
                 {% for notice in quiz_list %}
-                <tr class="text-center" style="cursor:pointer;" onclick="location.href='/exam/{{ notice.id }}/'">
+                <tr class="text-center" style="cursor:pointer;" onclick="location.href='/exam/{{ notice.product.id }}/'">
                     <td style="font-weight: 500;">{{ forloop.counter }} </td>
                     <td class="text-left" style="width:50%; font-weight: 600;"><a id="exam-{{ notice.id }}">{{ notice.quiz_title|truncatechars:30 }}</a></td>
                     <td style="font-weight: 500;">{{ notice.category }}</td>

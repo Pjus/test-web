@@ -25,6 +25,10 @@ from .helper import send_mail, email_auth_num
 from .decorators import *
 from .models import User
 
+from payment.models import PurchasedItem
+from edu.models import Product
+from exam.models import QuizContents
+
 # from cart.context_processors import counter
 # Create your views here.
 
@@ -114,8 +118,16 @@ def logout_view(request):
 # 메인화면(로그인 후)
 @login_message_required
 def main_view(request):
+    purchaseds = PurchasedItem.objects.filter(user=request.user)
+    exams_list = []
+    for item in purchaseds:
+        exam = QuizContents.objects.get(product=item.product)
+        exams_list.append(exam)
     
+    print(exam)
     context = {
+        'edu_list' : purchaseds,
+        'exam_list' : exams_list,
     }
     return render(request, 'users/main.html', context)
 

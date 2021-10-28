@@ -259,7 +259,10 @@ def saveTime(request, pk):
                     d1 = datetime.timedelta(hours=int(h1), minutes=int(m1), seconds=int(s1))
                     d2 = datetime.timedelta(hours=int(h2), minutes=int(m2), seconds=int(s2))
                     total = d1 + d2
-                    mysum += total
+                    if total > datetime.timedelta(hours=int(24), minutes=int(0), seconds=int(0)):
+                        pass
+                    else:
+                        mysum += total
                     item.stayedTime[page] = str(mysum)
                     item.save()
     return render(request, 'edu/study_list.html')

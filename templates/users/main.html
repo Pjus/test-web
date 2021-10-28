@@ -3,13 +3,40 @@
 {% block contents %}
 <br><br><br>
 
-<div class="study">
+<div id="study" style="height: 30%; position: relative; display: block;">
     <h1>교육</h1>
+    {% if edu_list %}
+        {% for edu in edu_list %}
+        <div class="inbox-contents">
+            <a href="/edu/{{ edu.product.id }}/"> {{ edu.product.name }}</a>
+        </div>
+        {% endfor %}
+    {% else %}
+        구입한 교육이 없습니다.
+    {% endif %}
 
 </div>
-<div class="cert" style="height: 50%; position: relative; display: flex;">
+<div id="exam" style="height: 30%; position: relative; display: block;">
+    <h1>시험</h1>
+    {% if exam_list %}
+        {% for exam in exam_list %}
+        <div class="inbox-contents">
+            <a href="/exam/{{ exam.product.id }}/"> {{ exam.quiz_title }}</a>
+        </div>
+        {% endfor %}
+    {% else %}
+        구입한 교육이 없습니다.
+    {% endif %}
+</div>
+<div id="cert" style="height: 30%; position: relative; display: block;">
     <h1>수료증</h1>
+    {% if cert_list %}
+        {% for cert in cert_list %}
+            {{ cert.quiz_title }}
 
+        {% endfor %}
+    {% else %}
+        수료한 교육이 없습니다.
+    {% endif %}
 </div>
-
 {% endblock %}
