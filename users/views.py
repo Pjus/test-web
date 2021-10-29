@@ -120,14 +120,19 @@ def logout_view(request):
 def main_view(request):
     purchaseds = PurchasedItem.objects.filter(user=request.user)
     exams_list = []
+    cert_list = []
     for item in purchaseds:
         exam = QuizContents.objects.get(product=item.product)
-        exams_list.append(exam)
+        if item.certificated == False:
+            exams_list.append(exam)
+        else:
+            cert_list.append(exam)
     
     print(exam)
     context = {
         'edu_list' : purchaseds,
         'exam_list' : exams_list,
+        'cert_list' : cert_list,
     }
     return render(request, 'users/main.html', context)
 

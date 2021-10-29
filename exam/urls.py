@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 app_name = 'exam'
 
 urlpatterns = [
-    # path('test/', views.exam_test_view, name='exam_test'),
+    path('test/', views.exam_test_view, name='exam_test'),
 
 
     path('', views.ExamListView.as_view(), name='exam_list'),
@@ -16,6 +16,7 @@ urlpatterns = [
     path('quiz/', views.quiz_write_view, name='quiz_write'),
     path('<int:pk>/edit/', views.question_write_view, name='question_write'),
     path('<int:pk>/submit/', views.exam_submit_view, name='exam_submit'),
+
 
 
 

@@ -42,7 +42,7 @@
                             <td style="font-weight: 500;">{{ notice.category }}</td>
                             <td style="font-weight: 500;"> &#8361; {{ notice.price }}</td>
                             <td style="font-weight: 500;">{{ notice.registered_date|date:'Y. m. d' }}</td>
-                            <td style="font-weight: 500;"><input id="edu-{{ notice.id }}" type="checkbox" name="selected" value="{{ notice.id }}"></td>
+                            <td style="font-weight: 500;" onclick="event.cancelBubble = true;"><input id="edu-{{ notice.id }}" type="checkbox" name="selected" value="{{ notice.id }}"></td>
                         </tr>
                         {% endfor %}
                     {% else %}

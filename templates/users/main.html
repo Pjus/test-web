@@ -32,7 +32,7 @@
     <h1>수료증</h1>
     {% if cert_list %}
         {% for cert in cert_list %}
-            {{ cert.quiz_title }}
+            <a href="/cert/{{ cert.product.id }}/"> {{ cert.quiz_title  }}</a>
 
         {% endfor %}
     {% else %}

@@ -1,8 +1,8 @@
 from django.db.models.query import prefetch_related_objects
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.generic import View, ListView
-from django.template.loader import get_template
+from django.template.loader import get_template, render_to_string
 from django.db.models import Q
 
 from datetime import datetime
@@ -21,48 +21,48 @@ class ExamListView(ListView):
     template_name = 'exam/exam_list.html'
     context_object_name = 'quiz_list' 
 
-    def get_queryset(self):
-        search_keyword = self.request.GET.get('q', '')
-        search_type = self.request.GET.get('type', '')
-        quiz_list = QuizContents.objects.order_by('id') 
-        if search_keyword :
-            if len(search_keyword) > 1 :
-                if search_type == 'all':
-                    search_quiz_list = quiz_list.filter(Q (title__icontains=search_keyword) | Q (content__icontains=search_keyword) | Q (writer__user_id__icontains=search_keyword))
-                elif search_type == 'title':
-                    search_quiz_list = quiz_list.filter(title__icontains=search_keyword)    
-                elif search_type == 'catagory':
-                    search_quiz_list = quiz_list.filter(catagory__icontains=search_keyword)    
-                return search_quiz_list
-            else:
-                messages.error(self.request, '검색어는 2글자 이상 입력해주세요.')
-        return quiz_list
+    # def get_queryset(self):
+    #     search_keyword = self.request.GET.get('q', '')
+    #     search_type = self.request.GET.get('type', '')
+    #     quiz_list = QuizContents.objects.order_by('id') 
+    #     if search_keyword :
+    #         if len(search_keyword) > 1 :
+    #             if search_type == 'all':
+    #                 search_quiz_list = quiz_list.filter(Q (title__icontains=search_keyword) | Q (content__icontains=search_keyword) | Q (writer__user_id__icontains=search_keyword))
+    #             elif search_type == 'title':
+    #                 search_quiz_list = quiz_list.filter(title__icontains=search_keyword)    
+    #             elif search_type == 'catagory':
+    #                 search_quiz_list = quiz_list.filter(catagory__icontains=search_keyword)    
+    #             return search_quiz_list
+    #         else:
+    #             messages.error(self.request, '검색어는 2글자 이상 입력해주세요.')
+    #     return quiz_list
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        paginator = context['paginator']
-        page_numbers_range = 5
-        max_index = len(paginator.page_range)
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     paginator = context['paginator']
+    #     page_numbers_range = 5
+    #     max_index = len(paginator.page_range)
 
-        page = self.request.GET.get('page')
-        current_page = int(page) if page else 1
+    #     page = self.request.GET.get('page')
+    #     current_page = int(page) if page else 1
 
-        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
-        end_index = start_index + page_numbers_range
-        if end_index >= max_index:
-            end_index = max_index
+    #     start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+    #     end_index = start_index + page_numbers_range
+    #     if end_index >= max_index:
+    #         end_index = max_index
 
-        page_range = paginator.page_range[start_index:end_index]
-        context['page_range'] = page_range
+    #     page_range = paginator.page_range[start_index:end_index]
+    #     context['page_range'] = page_range
 
-        search_keyword = self.request.GET.get('q', '')
-        search_type = self.request.GET.get('type', '')
+    #     search_keyword = self.request.GET.get('q', '')
+    #     search_type = self.request.GET.get('type', '')
 
-        if len(search_keyword) > 1 :
-            context['q'] = search_keyword
-        context['type'] = search_type
+    #     if len(search_keyword) > 1 :
+    #         context['q'] = search_keyword
+    #     context['type'] = search_type
 
-        return context
+    #     return context
 
 
 
@@ -157,15 +157,16 @@ def exam_detail_view(request, pk):
 
 @login_message_required
 def exam_submit_view(request, pk):
+    users_ans = json.loads(request.body,  encoding="UTF-8")
     score = 0
     real_ans = {}
     exam = QuizContents.objects.get(product_id=pk)
     title = exam
     quizs = Quiz.objects.filter(quiz_title=title)
+    certificated = False
 
     for quiz in quizs:
         real_ans[str(quiz.id)] = quiz.ans
-    users_ans = json.loads(request.body,  encoding="UTF-8")
     print(real_ans)
     print(users_ans)
 
@@ -181,27 +182,13 @@ def exam_submit_view(request, pk):
                     print('cert')
                     certificated = True
                     item.certificated = certificated
-                    # item.save()
+                    item.save()
                 else:
                     print('Failed')
                     certificated = False
-
-
     context = {
         'score' : score,
         'certificated' : certificated,
-
-
     }
-    return render(request, 'exam/exam_result.html', context)
-
-    # answers = {}
-    # for quiz in quizs:
-    #     answers[quiz.question] = quiz.ans
-    
-    # if jsonObject == answers:
-    #     if purchased.product.name == exam.product.name:
-    #         purchased.certificated = True
-    # else:
-    #     pass
+    return HttpResponse(json.dumps(context), content_type="application/json")
 

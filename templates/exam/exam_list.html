@@ -23,7 +23,6 @@
                     <th style="font-weight: bold; font-size: 16px;">제목</th>
                     <th style="font-weight: bold; font-size: 16px;">분류</th>
                     <th style="font-weight: bold; font-size: 16px;">수료여부</th>
-                    <th style="font-weight: bold; font-size: 16px;">수료증</th>
 
                 </tr>
                 {% if q %}
@@ -44,16 +43,20 @@
             <tbody>
                 {% if quiz_list %}
                 {% for notice in quiz_list %}
+                {% if notice.certificated == False %}
+
                 <tr class="text-center" style="cursor:pointer;" onclick="location.href='/exam/{{ notice.product.id }}/'">
                     <td style="font-weight: 500;">{{ forloop.counter }} </td>
                     <td class="text-left" style="width:50%; font-weight: 600;"><a id="exam-{{ notice.id }}">{{ notice.quiz_title|truncatechars:30 }}</a></td>
                     <td style="font-weight: 500;">{{ notice.category }}</td>
-                    {% if notice.cert == False %}
                     <td style="font-weight: 500;">X</td>
-                    {% else %}
+                {% else %}
+                <tr class="text-center" style="cursor:pointer;" onclick="alert('수료하셨습니다.')">
+                    <td style="font-weight: 500;">{{ forloop.counter }} </td>
+                    <td class="text-left" style="width:50%; font-weight: 600;"><a id="exam-{{ notice.id }}">{{ notice.quiz_title|truncatechars:30 }}</a></td>
+                    <td style="font-weight: 500;">{{ notice.category }}</td>
                     <td style="font-weight: 500;">O</td>
-                    {% endif %}
-                    <td style="font-weight: 500;">수료증</td>
+                {% endif %}
 
 
                 </tr>

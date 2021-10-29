@@ -7,6 +7,8 @@
 
 {% block contents %}
 <link rel="stylesheet" href="{% static 'css/quiz/score.css' %}">
+<link rel="stylesheet" href="{% static 'css/exam/exam_result.css' %}">
+
 <script src="{% static 'js/exam/quiz.js' %}"></script>
 
 <br><br><br>
@@ -106,21 +108,30 @@
             </div>
         </div>
     </div>
+    <div id="exam_result">
+        <br>
+        <h3 id="result_head"></h3>
+        <div id="score">
+
+        </div>
+        <div id="cert">
+    
+        </div>
+        <div id="info">
+
+        </div>
+    </div>
+
 </div>
+
+
 
 <script type="text/javascript">
 
-    // the selector will match all input controls of type :checkbox
-    // and attach a click event handler 
     $("input:checkbox").on('click', function() {
-    // in the handler, 'this' refers to the box clicked on
     var $box = $(this);
     if ($box.is(":checked")) {
-        // the name of the box is retrieved using the .attr() method
-        // as it is assumed and expected to be immutable
         var group = "input:checkbox[name='" + $box.attr("name") + "']";
-        // the checked state of the group/box on the other hand will change
-        // and the current value is retrieved using .prop() method
         $(group).prop("checked", false);
         $box.prop("checked", true);
     } else {
@@ -128,18 +139,8 @@
     }
     });
 
-    // function submit_modal() {
-    //     location.replace('/exam/{{ exam.product.id }}/submit');
-    // }
-
-    // function closeIt()
-    // {
-    // return "Any string value here forces a dialog box to \n" + 
-    //         "appear before closing the window.";
-    // }
-    // window.onbeforeunload = closeIt;
-
     function submit_modal(){
+        
         answers = {}
         let userAnsCunt = 0;
         const questions = document.getElementsByClassName('question');
@@ -151,15 +152,15 @@
                 userAnsCunt += 1;
                 const quiz = user_ans[i].id.split('-')[0]
                 answers[quiz] = user_ans[i].value
-                console.log(answers);
             }
         }
-        console.log(userAnsCunt);
-        console.log(questions.length);
 
         if(userAnsCunt !== questions.length){
             alert("모든 문항에 답해주십시오.")
         }else{
+            let quizs = document.getElementById('overlay');
+            quizs.classList.add('blur-in')
+            const pageId = '{{ exam.product.id }}'
             $.ajax({
             type: "POST",
             headers: {
@@ -167,18 +168,53 @@
             },
             url: "/exam/{{ exam.product.id }}/submit/",
             data: JSON.stringify(answers),
+            dataType: "json",
             success: function (data) {
-                // any process in data
-                // pass
+                let url = `/exam/${pageId}/submit/`;
+                $('#submit_modal').modal("hide"); //닫기
+                stop();
+                const result_box = document.getElementById("exam_result");
+                result_box.classList.add('is-open')
+                if(data.score > 59){
+                    document.getElementById('result_head').innerHTML = "축하합니다.";
+                    document.getElementById("score").innerHTML = `점수 : ${data.score}`;
+                    document.getElementById("cert").innerHTML =`합격`
+                    const info = document.getElementById("info");
+
+                    const cert_button = document.createElement("button");
+                    cert_button.innerHTML = '수료증 출력'
+                    cert_button.id = "detail_btn";
+                    cert_button.classList.add("btn");
+                    cert_button.classList.add("btn-sm");
+                    cert_button.classList.add("cert_btn");
+
+                    cert_button.onclick = function() { location.replace('/cert/{{ exam.product.id }}/'); };
+
+                    info.appendChild(cert_button)
+
+
+
+                }else{
+                    document.getElementById('result_head').innerHTML = "불합격입니다.";
+                    document.getElementById("score").innerHTML = data.score;
+                    document.getElementById("cert").innerHTML =`불합격`;
+                }
+
             },
             failure: function () {
                 alert("failure");
             }
             });
         }
-
-
     }
+
+    function stop() {
+        if (timer) {
+            clearTimeout(timer);
+            timer = 0;
+        }
+    }
+    
     </script>
 
 {% endblock %}
