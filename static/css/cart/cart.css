@@ -27,3 +27,19 @@
 .my_custom_button {
     margin-top: 5px;
 }
+
+#cert_address{
+    width: 80%;
+    margin-top: 5px;
+}
+
+#postcodify_search_button{
+    text-align: center;
+    width: 50px;
+    background-color: #D34A4A !important;
+    color: white;
+    border-radius: 0.2em;
+    outline: none;
+    border:1px solid transparent;
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+}

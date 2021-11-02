@@ -162,6 +162,7 @@ class PaidListView(ListView):
 
 @login_message_required
 def payment_cert_view(request):
+    print(request)
     current_full_url = request.build_absolute_uri()
     url_path = request.path
     target_url = current_full_url.replace(url_path, '')

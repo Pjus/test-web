@@ -79,9 +79,8 @@ def add_cert(request, cert_id):
             user = _cart_id(request),
         )
         cart.save()
-    
-    cert = Certification.objects.get(user=request.user)
-    print(cert.user)
+    pro = Product.objects.get(id=cert_id)
+    cert = Certification.objects.get(product=pro, user=request.user)
     
     context = {
         'cert_items' : cert,

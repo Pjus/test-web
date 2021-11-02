@@ -40,7 +40,7 @@
                     <td class="text-left" style="width:50%; font-weight: 600;" onclick="location.href='/cert/{{ cert.product.id }}/'"><a id="cert-{{ cert.id }}">{{ cert.product.name|truncatechars:30 }} 수료증</a></td>
                     <td style="font-weight: 500;" onclick="location.href='/cert/{{ cert.product.id }}/'">{{ cert.product.category }}</td>
                     <td style="font-weight: 500;" onclick="location.href='/cert/{{ cert.product.id }}/'">{{ cert.registered_date|date:'Y. m. d' }}</td>
-                    <td><button name="{{ cert.id }}" class="cert_btn" id="detail_btn" data-toggle="modal" data-target="#cert_modal" onclick="cert_select(this.name)">신청</button></td>
+                    <td><button name="{{ cert.product.id }}" class="cert_btn" id="detail_btn" data-toggle="modal" data-target="#cert_modal" onclick="cert_select(this.name)">신청</button></td>
                 </tr>
                 {% endfor %}
                 {% else %}
