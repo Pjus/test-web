@@ -21,7 +21,7 @@ from .forms import ProductWriteForm
 from .models import Product, Videos
 from users.models import User
 from users.decorators import admin_required
-
+from users.choice import CATEGORY_CHOICES
 
 from payment.models import PurchasedItem
 
@@ -40,11 +40,11 @@ class EduListView(ListView):
         if search_keyword :
             if len(search_keyword) > 1 :
                 if search_type == 'all':
-                    search_notice_list = notice_list.filter(Q (title__icontains=search_keyword) | Q (content__icontains=search_keyword) | Q (writer__user_id__icontains=search_keyword))
+                    search_notice_list = notice_list.filter(Q (name__icontains=search_keyword) | Q (category__icontains=search_keyword))
                 elif search_type == 'title':
-                    search_notice_list = notice_list.filter(title__icontains=search_keyword)    
+                    search_notice_list = notice_list.filter(name__icontains=search_keyword)    
                 elif search_type == 'catagory':
-                    search_notice_list = notice_list.filter(catagory__icontains=search_keyword)    
+                    search_notice_list = notice_list.filter(category__icontains=search_keyword)    
                 return search_notice_list
             else:
                 messages.error(self.request, '검색어는 2글자 이상 입력해주세요.')
@@ -192,12 +192,7 @@ class StudyListView(ListView):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '')
 
-        study_list = []
-        purchased = PurchasedItem.objects.filter(user=self.request.user)
-        for item in purchased:
-            study = Product.objects.get(name=item.product.name)
-            study_list.append(study)
-
+        study_list = PurchasedItem.objects.filter(user=self.request.user)
 
         if search_keyword :
             if len(search_keyword) > 1 :
@@ -241,28 +236,42 @@ class StudyListView(ListView):
 @login_message_required
 def saveTime(request, pk):
     products = Product.objects.get(id=pk)
-    jsonObject = json.loads(request.body,  encoding="UTF-8")
-    # print(jsonObject)
-    purchased = PurchasedItem.objects.filter(user=request.user)
-    for item in purchased:
-        if item.product.name == products.name:
-            if item.stayedTime == {}: 
-                item.stayedTime = jsonObject
-                item.save()
+    if request.is_ajax():
+        times = request.POST.get('times')
+        times = json.loads(times)
+        page_num = request.POST.get('current_page')
+        item = PurchasedItem.objects.get(user=request.user, product=products)
+   
+        if item.stayedTime == {}: 
+            item.stayedTime = times
+            item.save()
+        else:
+            mysum = datetime.timedelta()
+            exist_time = item.stayedTime[page_num]
+            new_time = times[page_num]
+            (h1, m1, s1) = exist_time.split(':')
+            (h2, m2, s2) = new_time.split(':')
+
+            d1 = datetime.timedelta(hours=int(h1), minutes=int(m1), seconds=int(s1))
+            d2 = datetime.timedelta(hours=int(h2), minutes=int(m2), seconds=int(s2))
+
+            total = d1 + d2
+            if total > datetime.timedelta(hours=int(0), minutes=int(20), seconds=int(0)):
+                pass
             else:
-                for page in jsonObject:
-                    mysum = datetime.timedelta()
-                    exist_time = item.stayedTime[page]
-                    new_time = jsonObject[page]
-                    (h1, m1, s1) = exist_time.split(':')
-                    (h2, m2, s2) = new_time.split(':')
-                    d1 = datetime.timedelta(hours=int(h1), minutes=int(m1), seconds=int(s1))
-                    d2 = datetime.timedelta(hours=int(h2), minutes=int(m2), seconds=int(s2))
-                    total = d1 + d2
-                    if total > datetime.timedelta(hours=int(24), minutes=int(0), seconds=int(0)):
-                        pass
-                    else:
-                        mysum += total
-                    item.stayedTime[page] = str(mysum)
-                    item.save()
-    return render(request, 'edu/study_list.html')
+                mysum += total
+            item.stayedTime[page_num] = str(mysum)
+            item.save()
+
+        total_time = datetime.timedelta()
+        for page in item.stayedTime:
+            (h2, m2, s2) = item.stayedTime[page].split(':')
+            d2 = datetime.timedelta(hours=int(h2), minutes=int(m2), seconds=int(s2))
+            total_time += d2
+        item.total_time = total_time
+        item.save()
+
+        context = {
+            'total_time' : str(item.total_time),
+        }
+        return HttpResponse(json.dumps(context), content_type="application/json")

@@ -13,7 +13,7 @@ class QuizContents(models.Model):
     cert = models.BooleanField(default=False, verbose_name="수료여부")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='상품명', default='')
     num_exam = models.IntegerField(default=3, verbose_name="응시기회") 
-
+    study_cert = models.BooleanField(default=False, verbose_name="응시조건여부")
     def __str__(self):
         return self.quiz_title
 

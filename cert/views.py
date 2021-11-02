@@ -12,15 +12,39 @@ from edu.models import Product
 from payment.models import PurchasedItem
 # Create your views here.
 
+from .models import Certification
 
 from reportlab.pdfgen import canvas
 from datetime import datetime
+from cart.models import Cart
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+
+from django.db.models import Q
 
 class CertListView(ListView):
     model = PurchasedItem
     paginate_by = 10
     template_name = 'cert/certification.html'  #DEFAULT : <app_label>/<model_name>_list.html
     context_object_name = 'cert_list'        #DEFAULT : <model_name>_list html name
+    def get_queryset(self):
+        search_keyword = self.request.GET.get('q', '')
+        search_type = self.request.GET.get('type', '')
+
+        cert_list = PurchasedItem.objects.filter(user=self.request.user, certificated=True)
+        if search_keyword :
+            if len(search_keyword) > 1 :
+                if search_type == 'all':
+                    search_notice_list = cert_list.filter(Q (quiz_title__icontains=search_keyword) | Q (category__icontains=search_keyword))
+                elif search_type == 'title':
+                    search_notice_list = cert_list.filter(quiz_title__icontains=search_keyword)    
+                elif search_type == 'catagory':
+                    search_notice_list = cert_list.filter(category__icontains=search_keyword)    
+                return search_notice_list
+            else:
+                messages.error(self.request, '검색어는 2글자 이상 입력해주세요.')
+        return cert_list
+
 
 class GeneratePDF(View):
     def get(self, request, pk):
@@ -40,7 +64,17 @@ class GeneratePDF(View):
             "category": category_name,
             "today": datetime.today().strftime('%Y/%m/%d'),
         }
-        
+        try:
+            cert = Certification.objects.get(user=request.user, product=product_name)
+        except:
+            cert = Certification.objects.create(
+                user = request.user,
+                user_name = current_user.name,
+                category = category_name,
+                product = product_name,
+            )
+            cert.save()
+
         pdf = render_to_pdf('cert/invoice.html', context)
         if pdf:
             response = HttpResponse(pdf, content_type='application/pdf')
@@ -53,29 +87,3 @@ class GeneratePDF(View):
             response.encoding = 'utf-8'
             return response
         return HttpResponse("Not found")
-
-def pdf_dw(request, pk):                                  
-    
-    # Create the HttpResponse object 
-    response = HttpResponse(content_type='application/pdf') 
-
-    # This line force a download
-    response['Content-Disposition'] = 'attachment; filename="1.pdf"' 
-
-    # READ Optional GET param
-    get_param = request.GET.get('name', 'World')
-
-    # Generate unique timestamp
-    ts = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')
-
-    p = canvas.Canvas(response)
-
-    # Write content on the PDF 
-    p.drawString(100, 500, "한글 " + get_param + " (Dynamic PDF) - " + ts ) 
-
-    # Close the PDF object. 
-    p.showPage() 
-    p.save() 
-
-    # Show the result to the user    
-    return response

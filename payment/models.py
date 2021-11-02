@@ -12,6 +12,8 @@ class PurchasedItem(models.Model):
     registered_date = models.DateTimeField(auto_now_add=True, verbose_name='구매일')
     certificated = models.BooleanField(default=False, verbose_name="수료여부")
     stayedTime = models.JSONField(default=dict, null=True, verbose_name="머문시간")
+    total_time = models.CharField(max_length=128, null=True, default='', verbose_name="총머문시간")
+    
 
     class Meta:
         ordering = ('registered_date', )

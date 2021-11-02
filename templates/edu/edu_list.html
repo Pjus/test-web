@@ -15,6 +15,13 @@
             {% endif %}
         </div>
     </div>
+    <div class="category" style="display: inline-flex;">
+        <li><a href="">alexis range</a></li>
+        <li>a</li>
+        <li>a</li>
+        <li>a</li>
+        <li>a</li>
+    </div>
     <form action="/cart/add/" method="post">
         {% csrf_token %}
         <div>
@@ -85,12 +92,12 @@
             <div class="col">
                 <div style="float: right;" class="form-row">
                     <div class="form-row">
+
                         <div class="col" style="margin-top: 10px;">
                             <select style="width: 6em;" class="custom-select custom-select-md" name="type">
                                 <option value="all">전체</option>
                                 <option value="title">상품명</option>
                                 <option value="catagory">분류</option>
-                                <option value="catagory">구매여부</option>
                             </select>
                         </div>
                         <div class="col" style="margin-top: 10px;">

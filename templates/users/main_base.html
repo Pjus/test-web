@@ -82,6 +82,7 @@
                 </div>
                 {% else %}
                 <span style="font-size: 22px;">{{ user.name }}</span> 님 환영합니다.
+                <br>
                 <a href="{% url 'users:logout' %}" style="margin-left:30px;">로그아웃</a>
                 <br>
                 {% endif %}
@@ -99,8 +100,7 @@
                         <a href="{% url 'users:main' %}"><i class="fas fa-home" style="margin-left:1px;"></i>&nbsp;&nbsp;메인으로</a>
                     </li>
                     <li>
-                        <a href="{% url 'edu:edu_list' %}"><i
-                                class="fas fa-user" style="margin:0 2.5px;"></i>&nbsp;&nbsp;구입하기</a>
+                        <a href="{% url 'edu:edu_list' %}"><i class="fas fa-cart-plus"></i>&nbsp;&nbsp;구입하기</a>
                         <ul class="collapse list-unstyled" id="homeSubmenu"></ul>
                     </li>
 
@@ -110,8 +110,7 @@
                     </li>
                     {% endif %}
                     <li>
-                        <a href="{% url 'edu:study_list' %}"><i
-                                class="fas fa-user" style="margin:0 2.5px;"></i>&nbsp;&nbsp;수강하기</a>
+                        <a href="{% url 'edu:study_list' %}"><i class="fas fa-book-open"></i>&nbsp;&nbsp;수강하기</a>
                         <ul class="collapse list-unstyled" id="homeSubmenu"></ul>
                     </li>
                         <!--  data-toggle="collapse" aria-expanded="false" class="dropdown-toggle menu2" -->
@@ -135,6 +134,14 @@
                     <li>
                         <a href="/" ><i class="fas fa-robot"></i>&nbsp;&nbsp;챗봇연결</a>
                     </li>
+                    {% if user.is_authenticated %}
+                    {% if user.level == '0' %}
+                    <li>
+                        <a href="/" ><i class="fas fa-money-check"></i>&nbsp;&nbsp;수료증 원본신청 확인</a>
+                    </li>
+                    {% endif %}
+                    {% endif %}
+
                 </ul>
 
                 <!--사이드바 FOOTER-->

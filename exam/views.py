@@ -1,11 +1,12 @@
 from django.db.models.query import prefetch_related_objects
+from django.forms.widgets import PasswordInput
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import View, ListView
 from django.template.loader import get_template, render_to_string
 from django.db.models import Q
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import exam
 from users.decorators import * 
 from .forms import *
@@ -17,52 +18,76 @@ import json
 
 class ExamListView(ListView):
     model = QuizContents
+    bought_items = PurchasedItem
     paginate_by = 10
     template_name = 'exam/exam_list.html'
-    context_object_name = 'quiz_list' 
+    context_object_name = 'exam_list' 
 
-    # def get_queryset(self):
-    #     search_keyword = self.request.GET.get('q', '')
-    #     search_type = self.request.GET.get('type', '')
-    #     quiz_list = QuizContents.objects.order_by('id') 
-    #     if search_keyword :
-    #         if len(search_keyword) > 1 :
-    #             if search_type == 'all':
-    #                 search_quiz_list = quiz_list.filter(Q (title__icontains=search_keyword) | Q (content__icontains=search_keyword) | Q (writer__user_id__icontains=search_keyword))
-    #             elif search_type == 'title':
-    #                 search_quiz_list = quiz_list.filter(title__icontains=search_keyword)    
-    #             elif search_type == 'catagory':
-    #                 search_quiz_list = quiz_list.filter(catagory__icontains=search_keyword)    
-    #             return search_quiz_list
-    #         else:
-    #             messages.error(self.request, '검색어는 2글자 이상 입력해주세요.')
-    #     return quiz_list
+    def get_queryset(self):
+        search_keyword = self.request.GET.get('q', '')
+        search_type = self.request.GET.get('type', '')
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     paginator = context['paginator']
-    #     page_numbers_range = 5
-    #     max_index = len(paginator.page_range)
+        study_list = PurchasedItem.objects.filter(user=self.request.user)
+        exam_list = []
+        for item in study_list:
+            print(item.product)
+            studied_time = item.total_time
+            try:
+                (h, m, s) = studied_time.split(':')
+                time = timedelta(hours=int(h), minutes=int(m), seconds=int(s))
+            except:
+                time = timedelta(hours=int(0), minutes=int(0), seconds=int(0))
 
-    #     page = self.request.GET.get('page')
-    #     current_page = int(page) if page else 1
+            if time > timedelta(hours=int(0), minutes=int(20), seconds=int(0)):
+                exam_item = QuizContents.objects.get(product=item.product)
+                exam_item.study_cert = True
+                if item.certificated == True:
+                    exam_item.cert = True
+            else:
+                exam_item = QuizContents.objects.get(product=item.product)
+                exam_item.study_cert = False
 
-    #     start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
-    #     end_index = start_index + page_numbers_range
-    #     if end_index >= max_index:
-    #         end_index = max_index
+            exam_list.append(exam_item)
 
-    #     page_range = paginator.page_range[start_index:end_index]
-    #     context['page_range'] = page_range
 
-    #     search_keyword = self.request.GET.get('q', '')
-    #     search_type = self.request.GET.get('type', '')
+        if search_keyword :
+            if len(search_keyword) > 1 :
+                if search_type == 'all':
+                    search_notice_list = exam_list.filter(Q (quiz_title__icontains=search_keyword) | Q (category__icontains=search_keyword))
+                elif search_type == 'title':
+                    search_notice_list = exam_list.filter(quiz_title_icontains=search_keyword)    
+                elif search_type == 'catagory':
+                    search_notice_list = exam_list.filter(category__icontains=search_keyword)    
+                return search_notice_list
+            else:
+                messages.error(self.request, '검색어는 2글자 이상 입력해주세요.')
+        return exam_list
 
-    #     if len(search_keyword) > 1 :
-    #         context['q'] = search_keyword
-    #     context['type'] = search_type
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginator = context['paginator']
+        page_numbers_range = 5
+        max_index = len(paginator.page_range)
 
-    #     return context
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range = paginator.page_range[start_index:end_index]
+        context['page_range'] = page_range
+
+        search_keyword = self.request.GET.get('q', '')
+        search_type = self.request.GET.get('type', '')
+
+        if len(search_keyword) > 1 :
+            context['q'] = search_keyword
+        context['type'] = search_type
+
+        return context
 
 
 
@@ -145,6 +170,8 @@ def exam_submit_view(request, name):
 def exam_detail_view(request, pk):
     print(request.session)
     exam = get_object_or_404(QuizContents, product_id=pk)
+    exam.num_exam -= 1
+    exam.save()
     title = exam
     quizs = Quiz.objects.filter(quiz_title=title)
 

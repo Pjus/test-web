@@ -9,5 +9,8 @@ urlpatterns = [
     path('add/', views.add_cart, name='add_cart'),
     path('', views.cart_detail, name="cart_detail"),
     path('remove/<int:product_id>/', views.delete_cartItem, name="cart_remove"),
+    path('add/cert/<int:cert_id>/', views.add_cert, name='add_cert'),
+
+
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -1,3 +1,10 @@
 from django.contrib import admin
+from .models import Certification
 
-# Register your models here.
+class CertAdmin(admin.ModelAdmin):
+    list_display = ['user', 'category', 'registered_date']
+    list_per_page = 20
+
+
+admin.site.register(Certification, CertAdmin)
+

@@ -128,7 +128,6 @@ def main_view(request):
         else:
             cert_list.append(exam)
     
-    print(exam)
     context = {
         'edu_list' : purchaseds,
         'exam_list' : exams_list,

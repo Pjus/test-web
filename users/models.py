@@ -34,10 +34,10 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     
     objects = UserManager()
-
+    address = models.CharField(max_length=128, verbose_name="주소",null=True, default='')
     user_id = models.CharField(max_length=17, verbose_name="아이디", unique=True)
     password = models.CharField(max_length=256, verbose_name="비밀번호")
-    email = models.EmailField(max_length=128, verbose_name="이메일",null=True, unique=True)
+    email = models.EmailField(max_length=128, verbose_name="이메일", null=True, unique=True)
     hp = models.IntegerField(verbose_name="핸드폰번호", null=True, unique=True)
     name = models.CharField(max_length=8, verbose_name="이름", null=True)
     sex = models.CharField(choices=GENDER_CHOICES, max_length=8, verbose_name="성별", null=True)

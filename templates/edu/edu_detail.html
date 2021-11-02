@@ -26,6 +26,7 @@
                 <!--제목,분류,작성일-->
                 <div class="card-header">
                     <strong style="font-size: 18px;">{{ notice.name }}</strong>&nbsp;&nbsp;<span style="font-size: 18px; color: gray;"></span>
+                    <span id="study_total"></span>
                     <span style="float:right;">{{ notice.registered_date|date:'Y.m.d. H:i' }}</span>
                 </div>
                 <div class="card-body" style="min-height: 400px; color:black;">
@@ -58,6 +59,9 @@
                 {% if request.user.level == '0' %}
                 <button class="btn btn-sm" id="detail_btn" onclick="location.href='/edu/{{ notice.id }}/edit/'">수정</button>
                 <button class="btn btn-sm" id="detail_btn" data-toggle="modal" data-target="#delete_modal">삭제</button>
+                <button class="btn btn-sm" id="detail_btn" data-toggle="modal" data-target="#exam_modal">시험보기</button>
+                <button class="btn btn-sm" id="detail_btn" onclick="location.href='/edu/'">목록으로</button>
+                {% else %}
                 <button class="btn btn-sm" id="detail_btn" data-toggle="modal" data-target="#exam_modal">시험보기</button>
                 <button class="btn btn-sm" id="detail_btn" onclick="location.href='/edu/'">목록으로</button>
                 {% endif %}
@@ -97,6 +101,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+            {{ total_time }}
             <div class="modal-body">
                 <p>시험응시 하시겠습니까?</p>
             </div>
@@ -113,7 +118,7 @@ const today = new Date();
 const hours = today.getHours();
 const minits = today.getMinutes();
 const seconds = today.getSeconds();
-
+let study_total_time = ''
 let initial_time = `${hours}:${minits}:${seconds}`;
 
 const stayedGapList = new Object;
@@ -148,9 +153,16 @@ function prev_page() {
 function next_page() {
     const next_page_num = page_num + 1;
     if (next_page_num === img_list.length){
-        const button = document.getElementById('exam_btn');
-        button.click();
+        if(timestrToSec(study_total_time) > timestrToSec("00:20:00")){
+            const button = document.getElementById('exam_btn');
+            button.click();
+        }
+        else{
+            alert("마지막 페이지 입니다. 20분 이상 교육을 수강하지 않았습니다.")
+        }
+
     } else {
+        console.log(timestrToSec(study_total_time) > timestrToSec("00:20:00"))
         const new_src = img_list[next_page_num].value
         img.src = new_src
         page_num = next_page_num
@@ -202,12 +214,8 @@ function timeCheck(){
     current = `${hours}:${minits}:${seconds}`;
     stayed = formatTime(timestrToSec(current) - timestrToSec(initial_time));
     initial_time = current
-    console.log(initial_time)
-    console.log(current)
-    console.log(stayed)
 
-    stayedGapList[page_num] = formatTime(timestrToSec(stayedGapList[page_num]) + timestrToSec(stayed));
-    console.log(stayedGapList)
+    stayedGapList[page_num] = stayed;
 
     $.ajax({
         type: "POST",
@@ -215,10 +223,15 @@ function timeCheck(){
             'X-CSRFTOKEN' : '{{ csrf_token }}'
         },
         url: "/edu/{{ notice.id }}/savetime/",
-        data: JSON.stringify(stayedGapList),
+        data: {
+            times : JSON.stringify(stayedGapList),
+            current_page : page_num,
+        },
         success: function (data) {
-            // any process in data
-            // pass
+            // console.log(data.total_time)
+            study_total_time = data.total_time;
+            const study_time = document.getElementById('study_total')
+            study_time.innerText = study_total_time
         },
         failure: function () {
             alert("failure");
