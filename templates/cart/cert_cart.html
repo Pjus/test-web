@@ -53,18 +53,19 @@
                                 주소:
                                 <br>
                                 <!-- 주소와 우편번호를 입력할 <input>들을 생성하고 적당한 name과 class를 부여한다 -->
-                                <input id="cert_address" type="text" name="address" class="postcodify_postcode5" value="" />
-                                <button id="postcodify_search_button">검색</button><br />
-                                <input id="cert_address" type="text" name="address" class="postcodify_address" value="" /><br />
-                                <input id="cert_address" type="text" name="address" class="postcodify_details" value="" /><br />
-                                <input id="cert_address" type="text" name="address" class="postcodify_extra_info" value="" /><br />
+                                <input id="address1" type="text" name="address" class="postcodify_postcode5" value="" disabled/>
+                                <button class="send_address" id="postcodify_search_button" >검색</button><br />
+                                <input id="address2" type="text" name="address" class="postcodify_address" value="" disabled/>
+                                <button class="send_address" onclick="send_address()">등록</button><br />
+                                <input id="address_detail" type="text" name="address" class="postcodify_details" value="" disabled required/><br />
+                                <input id="address3" type="text" name="address" class="postcodify_extra_info" value="" disabled/><br />
                             </td>
-
-
-                            <td></td>
                         </tr>
                     </tbody>
                 </table>
+                <div id="cert_address">
+                    
+                </div>
             </div>
             <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
                 <table class="table my_custom_table">
@@ -105,7 +106,59 @@
 
 <!-- "검색" 단추를 누르면 팝업 레이어가 열리도록 설정한다 -->
 <script> 
-    $(function() { $("#postcodify_search_button").postcodifyPopUp(); }); 
+    $(function() { 
+        $("#postcodify_search_button").postcodifyPopUp(); 
+
+
+    }); 
+
+
+    function send_address(){
+        const cert_data = {}
+        let cert_address = ''
+        const address = document.getElementsByName('address')
+        for(i=0;i<address.length;i++){
+            cert_address += (address[i].value + " ")
+            console.log(cert_address)
+
+
+        }
+
+        cert_data['cert_add'] = cert_address
+        cert_data['product_id'] = '{{ cert_items.product.id }}'
+
+        console.log(cert_data)
+        $.ajax({
+            type: "POST",
+            headers: {
+                'X-CSRFTOKEN' : '{{ csrf_token }}'
+            },
+            url: "/cert/cert_add/",
+            data: JSON.stringify(cert_data),
+            dataType: "json",
+            success: function (data) {
+                document.getElementById('cert_address').innerText = "배송지 : " + data.cert
+
+            },
+            failure: function () {
+                alert("failure");
+            }
+        });
+    }
+
+
+    function checkAdd(){
+        const add_detail = document.querySelector("#address_detail")
+        const add_info = document.querySelector(".code5")
+
+
+        if ((add_info.innerHTML).length > 1){
+            add_detail.disabled = false;
+        }
+    }
+
+    setInterval(checkAdd, 100);
+
 
 </script>
     {% endif %}
