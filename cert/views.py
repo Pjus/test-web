@@ -114,7 +114,7 @@ def cert_add_save(request):
 class CertCheckListView(ListView):
     model = CertItem
     paginate_by = 10
-    template_name = 'cert/certification.html'  #DEFAULT : <app_label>/<model_name>_list.html
+    template_name = 'cert/reqcheck.html'  #DEFAULT : <app_label>/<model_name>_list.html
     context_object_name = 'cert_list'        #DEFAULT : <model_name>_list html name
     def get_queryset(self):
         search_keyword = self.request.GET.get('q', '')

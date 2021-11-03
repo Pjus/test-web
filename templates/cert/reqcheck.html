@@ -13,7 +13,7 @@
 <div class="container">
     <div class="row mt-5">
         <div class="col-12">
-            <h4 style="font-weight: bold;">수료증</h4>
+            <h4 style="font-weight: bold;">수료증 원본 신청 현황</h4>
             {% if q %}
             <h5 style="color: gray; font-weight: 550;"><i class="fas fa-search"></i>&nbsp;'{{ q }}' 검색 결과입니다.</h5>
             {% endif %}
@@ -30,7 +30,6 @@
                     <th style="font-weight: bold; font-size: 16px;">주소</th>
                     <th style="font-weight: bold; font-size: 16px;">등록시간</th>
                     <th style="font-weight: bold; font-size: 16px;">배송</th>
-
                 </tr>
             </thead>
             <tbody>
@@ -42,6 +41,7 @@
                     <td class="text-left" style="width:50%; font-weight: 600;" onclick="location.href='/cert/{{ cert.product.id }}/'"><a id="cert-{{ cert.id }}">{{ cert.product.name|truncatechars:30 }} 수료증</a></td>
                     <td style="font-weight: 500;" onclick="location.href='/cert/{{ cert.product.id }}/'">{{ cert.user }}</td>
                     <td style="font-weight: 500;" onclick="location.href='/cert/{{ cert.product.id }}/'">{{ cert.product.category }}</td>
+                    <td style="font-weight: 500;" onclick="location.href='/cert/{{ cert.product.id }}/'">{{ cert.cert.address }}</td>
                     <td style="font-weight: 500;" onclick="location.href='/cert/{{ cert.product.id }}/'">{{ cert.registered_date|date:'Y. m. d' }}</td>
                     <td><button name="{{ cert.product.id }}" class="cert_btn" id="detail_btn" data-toggle="modal" data-target="#cert_modal" onclick="cert_select(this.name)">배송확인</button></td>
                 </tr>
@@ -56,7 +56,7 @@
                     {% else %}
                         <tr class="text-center">
                             <td style="font-weight: bold; color:gray;" colspan="5">
-                                <i class="fas fa-info-circle"></i>&nbsp;수료한 교육이 없습니다.
+                                <i class="fas fa-info-circle"></i>&nbsp;수료증 원본 신청이 없습니다.
                             </td>
                         </tr>
                     {% endif %}
