@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from edu.models import Product
-from .models import CartItem, Cart
+from .models import CartItem, Cart, CertItem
 from django.core.exceptions import ObjectDoesNotExist
 from users.decorators import *
 

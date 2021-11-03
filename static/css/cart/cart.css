@@ -28,12 +28,12 @@
     margin-top: 5px;
 }
 
-#cert_address{
+.cert_address{
     width: 80%;
     margin-top: 5px;
 }
 
-#postcodify_search_button{
+.send_address{
     text-align: center;
     width: 50px;
     background-color: #D34A4A !important;

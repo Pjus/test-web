@@ -115,14 +115,14 @@
                     </li>
                         <!--  data-toggle="collapse" aria-expanded="false" class="dropdown-toggle menu2" -->
                     <li>
-                        <a href="#pageSubmenu1"><i
+                        <a href="{% url 'exam:exam_list' %}"><i
                                 class="fas fa-pen" style="margin-right:4px;"></i>&nbsp;&nbsp;시험보기</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu1">
    
                         </ul>
                     </li>
                     <li>
-                        <a href="#pageSubmenu2"><i
+                        <a href="{% url 'cert:certification' %}"><i
                                 class="fas fa-user-graduate" style="margin-right:4px;"></i>&nbsp;&nbsp;수료증</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu2">
                             <!-- <li>
@@ -137,7 +137,7 @@
                     {% if user.is_authenticated %}
                     {% if user.level == '0' %}
                     <li>
-                        <a href="/" ><i class="fas fa-money-check"></i>&nbsp;&nbsp;수료증 원본신청 확인</a>
+                        <a href="{% url 'cert:cert_check' %}" ><i class="fas fa-money-check"></i>&nbsp;&nbsp;수료증 원본신청 확인</a>
                     </li>
                     {% endif %}
                     {% endif %}

@@ -114,13 +114,16 @@ def edu_write_view(request):
         form = ProductWriteForm(request.POST)
         
         if form.is_valid():
-            notice = form.save(commit = False)
+            product = form.save(commit = False)
             if request.FILES:
-                if 'upload_files' in request.FILES.keys():
-                    notice.filename = request.FILES['upload_files'].name
-                    notice.upload_files = request.FILES['upload_files']
-                    notice.image = request.FILES['image']
-            notice.save()
+                try:
+                    if 'upload_files' in request.FILES.keys():
+                        product.filename = request.FILES['upload_files'].name
+                        product.upload_files = request.FILES['upload_files']
+                        product.image = request.FILES['image']
+                except:
+                    print("err")
+            product.save()
             return redirect('edu:edu_list')
     else:
         form = ProductWriteForm()

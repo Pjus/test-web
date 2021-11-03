@@ -17,6 +17,7 @@ def get_file_path1(instance, filename):
 
 # Create your models here.
 class Certification(models.Model):
+    name = models.CharField(max_length=250, unique=True, verbose_name='수료증명', default="")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=SET_NULL, null=True, verbose_name='사용자')
     user_name = models.CharField(max_length=128, verbose_name="사용자 이름",  default="",null=True)
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=128, verbose_name="분류", null=True)
@@ -26,4 +27,6 @@ class Certification(models.Model):
     price = models.IntegerField(default=30000, verbose_name="수료증 가격")
 
 
+    def __str__(self) -> str:
+        return f'{self.name}'
 
