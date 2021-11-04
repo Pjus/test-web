@@ -20,6 +20,11 @@ GENDER_CHOICES = (
 
 )
 
+CART_CHOICES = (
+    ("Product", "Product"),
+    ("Cert", "Cert"),
+
+)
 
 CATEGORY_CHOICES = (
     ("음주운전", "음주운전"),

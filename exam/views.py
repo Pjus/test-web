@@ -29,26 +29,28 @@ class ExamListView(ListView):
 
         study_list = PurchasedItem.objects.filter(user=self.request.user)
         exam_list = []
-        for item in study_list:
-            print(item.product)
-            studied_time = item.total_time
-            try:
-                (h, m, s) = studied_time.split(':')
-                time = timedelta(hours=int(h), minutes=int(m), seconds=int(s))
-            except:
-                time = timedelta(hours=int(0), minutes=int(0), seconds=int(0))
+        try:
+            for item in study_list:
+                print(item.product)
+                studied_time = item.total_time
+                try:
+                    (h, m, s) = studied_time.split(':')
+                    time = timedelta(hours=int(h), minutes=int(m), seconds=int(s))
+                except:
+                    time = timedelta(hours=int(0), minutes=int(0), seconds=int(0))
 
-            if time > timedelta(hours=int(0), minutes=int(20), seconds=int(0)):
-                exam_item = QuizContents.objects.get(product=item.product)
-                exam_item.study_cert = True
-                if item.certificated == True:
-                    exam_item.cert = True
-            else:
-                exam_item = QuizContents.objects.get(product=item.product)
-                exam_item.study_cert = False
+                if time > timedelta(hours=int(0), minutes=int(20), seconds=int(0)):
+                    exam_item = QuizContents.objects.get(product=item.product)
+                    exam_item.study_cert = True
+                    if item.certificated == True:
+                        exam_item.cert = True
+                else:
+                    exam_item = QuizContents.objects.get(product=item.product)
+                    exam_item.study_cert = False
 
-            exam_list.append(exam_item)
-
+                exam_list.append(exam_item)
+        except:
+            pass
 
         if search_keyword :
             if len(search_keyword) > 1 :

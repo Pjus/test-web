@@ -259,10 +259,7 @@ def saveTime(request, pk):
             d2 = datetime.timedelta(hours=int(h2), minutes=int(m2), seconds=int(s2))
 
             total = d1 + d2
-            if total > datetime.timedelta(hours=int(0), minutes=int(20), seconds=int(0)):
-                pass
-            else:
-                mysum += total
+            mysum += total
             item.stayedTime[page_num] = str(mysum)
             item.save()
 

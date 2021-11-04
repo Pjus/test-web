@@ -20,10 +20,12 @@ def add_cart(request):
             product = Product.objects.get(id=product_id)
             image = product.image
             try:
-                cart = Cart.objects.get(user=_cart_id(request))
+                cart = Cart.objects.get(user=_cart_id(request), item_type = "Product")
             except Cart.DoesNotExist:
                 cart = Cart.objects.create(
                     user = _cart_id(request),
+                    item_type = "Product"
+
                 )
                 cart.save()
             try:
@@ -42,7 +44,7 @@ def add_cart(request):
 @login_message_required
 def cart_detail(request, total=0, counter=0, cart_items=None):
     try:
-        cart = Cart.objects.get(user=_cart_id(request))
+        cart = Cart.objects.get(user=_cart_id(request), item_type = "Product")
         cart_items = CartItem.objects.filter(cart=cart, active=True)
         if not cart_items:
             cart.delete()
@@ -71,17 +73,29 @@ def delete_cartItem(request, product_id):
 
 @login_message_required
 def add_cert(request, cert_id):
-    print(cert_id)
     try:
-        cart = Cart.objects.get(user=_cart_id(request))
+        cert_cart = Cart.objects.get(user=request.user, item_type = "Cert")
     except Cart.DoesNotExist:
-        cart = Cart.objects.create(
-            user = _cart_id(request),
+        cert_cart = Cart.objects.create(
+            user = request.user,
+            item_type = "Cert"
         )
-        cart.save()
+        cert_cart.save()
+
     pro = Product.objects.get(id=cert_id)
     cert = Certification.objects.get(product=pro, user=request.user)
     
+    try:
+        cert_item = CertItem.objects.get(user=request.user)
+        cert_item.save()
+    except:
+        cert_item = CertItem.objects.create(
+            user = request.user,
+            product = pro,
+            cart = cert_cart,
+            cert = cert
+        )
+
     context = {
         'cert_items' : cert,
     }

@@ -1,7 +1,7 @@
 
-.cert_btn{
+.cert_req_btn{
     text-align: center;
-    width: 50px;
+    width: 80px;
     background-color: #D34A4A !important;
     color: white;
     border-radius: 0.2em;
@@ -11,6 +11,3 @@
 
 }
 
-#cert_submit_btn{
-
-}

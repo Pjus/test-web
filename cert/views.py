@@ -92,9 +92,6 @@ class GeneratePDF(View):
 
 
 
-
-
-
 def cert_add_save(request):
     if request.is_ajax():
         print('ajax')
@@ -102,11 +99,13 @@ def cert_add_save(request):
         product_id = cert_data['product_id']
         product_name = Product.objects.get(id=product_id)
         cert_add = cert_data['cert_add']
-        cert = Certification.objects.get(user=request.user, product=product_name)
-        cert.address = cert_add
-        cert.save()
+        cert_buy = Certification.objects.get(user=request.user, product=product_name)
+        cert_buy.address = cert_add
+        cert_buy.save()
+
+
         context = {
-            'cert' : cert.address
+            'cert' : cert_buy.address
         }
         return HttpResponse(json.dumps(context), content_type="application/json")
 

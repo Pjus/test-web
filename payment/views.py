@@ -6,13 +6,12 @@ from edu.models import Product
 
 from .models import PurchasedItem
 
-from cart.models import Cart, CartItem
+from cart.models import Cart, CartItem, CertItem
 from cart.views import _cart_id
 import requests
 
 from users.decorators import *
 from .models import PurchasedItem
-from cert.models import Certification
 
 from django.db.models import Q
 
@@ -24,7 +23,7 @@ def payment_view(request):
     target_url = current_full_url.replace(url_path, '')
     print(target_url)
     current_user = str(request.user)
-    cart = Cart.objects.get(user=_cart_id(request))
+    cart = Cart.objects.get(user=_cart_id(request), item_type = "Product")
     cart_items = CartItem.objects.filter(cart=cart, active=True)
     content = {
         'cart' : cart_items,
@@ -67,8 +66,8 @@ def payment_view(request):
 
 @login_message_required
 def approval(request):
-    current_user = str(request.user)
-    cart = Cart.objects.get(user=_cart_id(request))
+    current_user = User.objects.get(user_id=request.user)
+    cart = Cart.objects.get(user=_cart_id(request), item_type = "Product")
     cart_items = CartItem.objects.filter(cart=cart, active=True)
     for item in cart_items:
         product = Product.objects.get(name=item.product.name)
@@ -83,7 +82,6 @@ def approval(request):
             )
             purchased.save()
 
-    cart = Cart.objects.get(user=_cart_id(request))
     URL = 'https://kapi.kakao.com/v1/payment/approve'
 
     headers = {
@@ -107,6 +105,39 @@ def approval(request):
         'amount': amount,
     }
     cart.delete()
+    return render(request, 'payment/approval.html', context)
+
+
+@login_message_required
+def approval_cert(request):
+    current_user = User.objects.get(user_id=request.user)
+    cart = Cart.objects.get(user=_cart_id(request), item_type = "Cert")
+    cart_items = CertItem.objects.get(cart=cart, active=True)
+    product = cart_items.product
+    print(product)
+
+    URL = 'https://kapi.kakao.com/v1/payment/approve'
+
+    headers = {
+        "Authorization": "KakaoAK " + "c7d8f589a61b699314201b6e1cc9f8c6",
+        "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+    }
+    
+    params = {
+        "cid": "TC0ONETIME",    # 테스트용 코드
+        "tid": request.session['tid'],  # 결제 요청시 세션에 저장한 tid
+        "partner_order_id": cart.cart_id,     # 주문번호
+        "partner_user_id": current_user.id,    # 유저 아이디
+        "pg_token": request.GET.get("pg_token"),     # 쿼리 스트링으로 받은 pg토큰
+    }
+
+    res = requests.post(URL, headers=headers, params=params)
+    amount = res.json()['amount']['total']
+    res = res.json()
+    context = {
+        'res': res,
+        'amount': amount,
+    }
     return render(request, 'payment/approval.html', context)
 
 
@@ -162,16 +193,16 @@ class PaidListView(ListView):
 
 @login_message_required
 def payment_cert_view(request):
-    print(request)
     current_full_url = request.build_absolute_uri()
     url_path = request.path
     target_url = current_full_url.replace(url_path, '')
-    print(target_url)
-    current_user = str(request.user)
-    cart = Cart.objects.get(user=_cart_id(request))
-    cart_items = CartItem.objects.filter(cart=cart, active=True)
+
+    current_user = User.objects.get(user_id=request.user)
+    cart = Cart.objects.get(user=_cart_id(request), item_type = "Cert")
+
+    cert_items = CertItem.objects.get(cart=cart, active=True)
     content = {
-        'cart' : cart_items,
+        'cart' : cert_items,
     }
 
     if request.method == "POST":
@@ -180,28 +211,26 @@ def payment_cert_view(request):
             "Authorization": "KakaoAK " + "c7d8f589a61b699314201b6e1cc9f8c6",   # 변경불가
             "Content-type": "application/x-www-form-urlencoded;charset=utf-8",  # 변경불가
         }
-        if len(cart_items) > 1:
-            items = f'{cart_items[0].product.name}외 {len(cart_items)-1}건'
-        else:
-            items = cart_items[0].product.name
 
-        quantity = [item.quantity for item in cart_items]
-        total_amount = [item.product.price for item in cart_items]
+        items = cert_items.cert
+        quantity = 1
+        total_amount = 30000
         params = {
             "cid": "TC0ONETIME",    # 테스트용 코드
             "partner_order_id": cart.cart_id,     # 주문번호
-            "partner_user_id": current_user,    # 유저 아이디
-            "item_name": items,        # 구매 물품 이름
-            "quantity": sum(quantity),                # 구매 물품 수량
-            "total_amount": sum(total_amount),        # 구매 물품 가격
+            "partner_user_id": current_user.id,    # 유저 아이디
+            "item_name": items.name,        # 구매 물품 이름
+            "quantity": quantity,                # 구매 물품 수량
+            "total_amount": total_amount,        # 구매 물품 가격
             "tax_free_amount": "0",         # 구매 물품 비과세
-            "approval_url": f"{target_url}/payment/kakaoPaySuccess/",
+            "approval_url": f"{target_url}/payment/kakaoPaySuccess/cert",
             "cancel_url": f"{target_url}/cart/",
             "fail_url": f"{target_url}/cart/",
         }
-        
-
+        print(params)
         res = requests.post(URL, headers=headers, params=params)
+        print(request.session['tid'])
+        print(res.json())
         request.session['tid'] = res.json()['tid']      # 결제 승인시 사용할 tid를 세션에 저장
         next_url = res.json()['next_redirect_pc_url']   # 결제 페이지로 넘어갈 url을 저장
         print(request.session['tid'])

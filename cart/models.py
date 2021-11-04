@@ -5,7 +5,7 @@ from django.db.models.deletion import SET_NULL
 import random
 
 from cert.models import Certification
-
+from users.choice import *
 def random_string():
     return str(random.randint(10000, 99999))
 
@@ -14,6 +14,7 @@ class Cart(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=SET_NULL, null=True, verbose_name='구매자')
     registered_date = models.DateTimeField(auto_now_add=True, verbose_name='등록시간')
     cart_id = models.CharField(max_length=18, default = random_string)
+    item_type = models.CharField(choices=CART_CHOICES, max_length=8, verbose_name="아이템 유형", null=True)
 
     class Meta:
         db_table = "Cart"
