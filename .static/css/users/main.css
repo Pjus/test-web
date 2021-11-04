@@ -8240,7 +8240,7 @@ h1, h2, h3, h4, h5,
 #sidebar {
   min-width: 300px;
   max-width: 300px;
-  background: #d14040f2;
+  background: #000000f2;
   color: #fff;
   -webkit-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -8372,6 +8372,15 @@ a[data-toggle="collapse"] {
 }
 
 #detail_btn {
+  background-color: #d14040f2;
+  color: white;
+  font-size: 14px;
+  /* height: 38px; */
+  /* margin-top: 10px;
+  margin-left: -0.5px; */
+}
+
+#submit_btn {
   background-color: #d14040f2;
   color: white;
   font-size: 14px;
