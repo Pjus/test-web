@@ -3,7 +3,7 @@ Description=uWSGI service
 After=syslog.target
 
 [Service]
-ExecStart=/home/ubuntu/anaconda3/envs/test/bin/uwsgi -i /srv/test-web/.config/uwsgi/zzz.ini
+ExecStart=/home/ubuntu/anaconda3/envs/open/bin/uwsgi -i /srv/test-web/.config/uwsgi/zzz.ini
 
 Restart=always
 KillSignal=SIGQUIT
