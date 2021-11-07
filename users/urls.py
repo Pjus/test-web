@@ -22,4 +22,9 @@ urlpatterns = [
     path('recovery/pw/auth/', views.auth_confirm_view, name='recovery_auth'),
     path('recovery/pw/reset/', views.auth_pw_reset_view, name='recovery_pw_reset'),
 
+    path('profile/', views.profile_view, name='profile'),
+    path('profile/update/', views.profile_update_view, name='profile_update'),
+    path('profile/delete/', views.profile_delete_view, name='profile_delete'),
+    path('profile/password/', views.password_edit_view, name='password_edit'),
+
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

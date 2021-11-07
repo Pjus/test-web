@@ -32,8 +32,10 @@ class CertListView(ListView):
     def get_queryset(self):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '')
-
-        cert_list = PurchasedItem.objects.filter(user=self.request.user, certificated=True)
+        try:
+            cert_list = PurchasedItem.objects.filter(user=self.request.user, certificated=True)
+        except:
+            cert_list = []
         if search_keyword :
             if len(search_keyword) > 1 :
                 if search_type == 'all':
@@ -102,7 +104,6 @@ def cert_add_save(request):
         cert_buy = Certification.objects.get(user=request.user, product=product_name)
         cert_buy.address = cert_add
         cert_buy.save()
-
 
         context = {
             'cert' : cert_buy.address

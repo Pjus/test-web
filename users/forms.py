@@ -1,7 +1,9 @@
 from django import forms
 
-from users.choice import AGE_CHOICES, GENDER_CHOICES
 from .models import User
+
+from django.contrib.auth.forms import UserChangeForm
+from .choice import *
 
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.forms import AuthenticationForm, UserChangeForm, SetPasswordForm, UserCreationForm, PasswordChangeForm
@@ -220,3 +222,16 @@ class CustomPasswordChangeForm(PasswordChangeForm):
         self.fields['new_password2'].widget.attrs.update({
             'class': 'form-control',
         })
+
+class CustomCsUserChangeForm(UserChangeForm):
+    password = None        
+    hp = forms.IntegerField(label='연락처', widget=forms.NumberInput(
+        attrs={'class': 'form-control', 'maxlength':'11', 'oninput':"maxLengthCheck(this)",}), 
+    )        
+    name = forms.CharField(label='이름', widget=forms.TextInput(
+        attrs={'class': 'form-control', 'maxlength':'8',}), 
+    )        
+
+    class Meta:
+        model = User()
+        fields = ['hp', 'name']

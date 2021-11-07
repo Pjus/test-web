@@ -162,21 +162,6 @@ def register_success(request):
 
     return render(request, 'users/register_success.html')
 
-# 비밀번호 수정
-@login_message_required
-def password_edit_view(request):
-    if request.method == 'POST':
-        password_change_form = CustomPasswordChangeForm(request.user, request.POST)
-        if password_change_form.is_valid():
-            user = password_change_form.save()
-            update_session_auth_hash(request, user)
-            # logout(request)
-            messages.success(request, "비밀번호를 성공적으로 변경하였습니다.")
-            return redirect('users:profile')
-    else:
-        password_change_form = CustomPasswordChangeForm(request.user)
-
-    return render(request, 'users/profile_password.html', {'password_change_form':password_change_form})
 
 
 # 아이디찾기
@@ -275,3 +260,57 @@ def auth_pw_reset_view(request):
         reset_password_form = CustomSetPasswordForm(request.user)
 
     return render(request, 'users/password_reset.html', {'form':reset_password_form})
+
+
+@login_message_required
+def profile_view(request):
+    if request.method == 'GET':
+        return render(request, 'users/profile.html')
+
+
+@login_message_required
+def profile_update_view(request):
+    if request.method == 'POST':
+        user_change_form = CustomCsUserChangeForm(request.POST, instance = request.user)
+
+        if user_change_form.is_valid():
+            user_change_form.save()
+            messages.success(request, '회원정보가 수정되었습니다.')
+            return render(request, 'users/profile.html')
+    else:
+        user_change_form = CustomCsUserChangeForm(instance = request.user)
+
+        return render(request, 'users/profile_update.html', {'user_change_form':user_change_form})
+
+
+# 회원탈퇴
+@login_message_required
+def profile_delete_view(request):
+    if request.method == 'POST':
+        password_form = CheckPasswordForm(request.user, request.POST)
+        
+        if password_form.is_valid():
+            request.user.delete()
+            logout(request)
+            messages.success(request, "회원탈퇴가 완료되었습니다.")
+            return redirect('/')
+    else:
+        password_form = CheckPasswordForm(request.user)
+
+    return render(request, 'users/profile_delete.html', {'password_form':password_form})
+
+# 비밀번호 수정
+@login_message_required
+def password_edit_view(request):
+    if request.method == 'POST':
+        password_change_form = CustomPasswordChangeForm(request.user, request.POST)
+        if password_change_form.is_valid():
+            user = password_change_form.save()
+            update_session_auth_hash(request, user)
+            # logout(request)
+            messages.success(request, "비밀번호를 성공적으로 변경하였습니다.")
+            return redirect('users:profile')
+    else:
+        password_change_form = CustomPasswordChangeForm(request.user)
+
+    return render(request, 'users/profile_password.html', {'password_change_form':password_change_form})

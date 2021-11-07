@@ -26,10 +26,9 @@ class ExamListView(ListView):
     def get_queryset(self):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '')
-
-        study_list = PurchasedItem.objects.filter(user=self.request.user)
         exam_list = []
         try:
+            study_list = PurchasedItem.objects.filter(user=self.request.user)
             for item in study_list:
                 print(item.product)
                 studied_time = item.total_time

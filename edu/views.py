@@ -194,8 +194,10 @@ class StudyListView(ListView):
     def get_queryset(self):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '')
-
-        study_list = PurchasedItem.objects.filter(user=self.request.user)
+        try:
+            study_list = PurchasedItem.objects.filter(user=self.request.user)
+        except:
+            study_list = []
 
         if search_keyword :
             if len(search_keyword) > 1 :
