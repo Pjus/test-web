@@ -80,6 +80,32 @@
                     </li>
                   </ul>
                 </div>
+
+
+                <div class="container">
+                  <div class="d-inline-block d-lg-none ml-md-0 mr-auto py-3"><a href="#" class="site-menu-toggle js-menu-toggle text-white"><span class="icon-menu h3"></span></a></div>
+
+                  <ul class="site-menu main-menu js-clone-nav d-none d-lg-block">
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'index' %}"  style="font-weight: 600;">HOME</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'edu:edu_list' %}"  style="font-weight: 600;">교육구입</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'edu:study_list' %}"  style="font-weight: 600;">교육수강</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'exam:exam_list' %}"  style="font-weight: 600;">시험</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'cert:certification' %}"  style="font-weight: 600;">수료증</a>
+                    </li>
+                  </ul>
+                </div>
+
+
+
               </nav>
             </div>
           </div>

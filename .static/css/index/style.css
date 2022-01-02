@@ -4,7 +4,10 @@ body {
     color: rgb(0, 0, 0);
     font-weight: 300;
     font-size: 1rem;
-    font-family: "Quicksand", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; }
+    font-family: "Quicksand", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; 
+    background-image: ;
+}
+
   
   ::-moz-selection {
     background: #000;
@@ -471,7 +474,7 @@ body {
       .sticky-wrapper .site-navbar a.active {
         color: #fff; }
     .sticky-wrapper.is-sticky .site-navbar {
-      background-color: #d14040f2; }
+      background-color: #4a40d1f2; }
       .sticky-wrapper.is-sticky .site-navbar .site-navigation .site-menu > li {
         display: inline-block;
         padding: 10px 5px; }
