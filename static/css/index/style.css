@@ -885,4 +885,6 @@ body {
     outline : none;
   }
   
-  
+  .logo{
+    width: 100px;
+  }
