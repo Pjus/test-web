@@ -606,7 +606,7 @@ pre code {
 
 @media (min-width:1200px) {
     .container {
-        max-width: 1140px
+        max-width: 1300px
     }
 }
 
@@ -624,7 +624,7 @@ pre code {
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    margin-right: -15px;
+    margin-right: -58px;
     margin-left: -15px
 }
 
@@ -1262,7 +1262,8 @@ pre code {
         -webkit-box-flex: 0;
         -ms-flex: 0 0 66.66667%;
         flex: 0 0 66.66667%;
-        max-width: 66.66667%
+        max-width: 66.66667%;
+        margin-left: -600px;
     }
 
     .col-md-9 {
