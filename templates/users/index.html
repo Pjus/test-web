@@ -2,10 +2,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>TEST</title>
+    <title>사이트 이름</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="shortcut icon" href="{% static 'img/reborn_favicon.ico' %}">
+    <link rel="shortcut icon" href="{% static 'img/logo.ico' %}">
     <link href="https://fonts.googleapis.com/css?family=Quicksand:400,500,700" rel="stylesheet"> <!--필수-->
     <link rel="stylesheet" href="{% static 'css/index/bootstrap.min.css' %}"> <!--필수-->
     
@@ -44,7 +44,15 @@
                   <span class="icon-phone mr-2"></span>
                   <span class="d-none d-md-inline-block">전화번호</span>
                 </a>
+                {% if user.is_authenticated %}
+                <a class="login" href='/users/main/'">마이페이지</a>
+                <a class="logout" href='/users/logout/'">로그아웃</a>
+                {% else %}
+                <a class="login" href='/users/login/'">로그인</a>
+                <a class="logout" href='/users/agreement/'">회원가입</a>
+                {% endif %}
               </div>
+
             </div>
             <div class="col-6 text-right">
             </div>
@@ -56,47 +64,50 @@
         <div class="container">
           <div class="row align-items-center">
             <div class="col-2">
-              <h1 class="my-0 site-logo"><a href="/"><img style="width: 50px;" src="{% static 'img/logo.png' %}" alt=""></a></h1>
+              <h1 class="my-0 site-logo"><a href="/"><img class="logo" style="width: 50px; margin-top: 10px;" src="{% static 'img/logo.png' %}" alt=""></a></h1>
+            </div>
+            <div class="com-name">
+              NAME
             </div>
             <div class="col-10">
-              <nav class="site-navigation" role="navigation">
-                <div class="container">
-
-                  <ul class="site-menu main-menu js-clone-nav d-none d-lg-block">
-                    <li class="nav-item dropdown">
-                      <a class="nav-link" href="{% url 'index' %}"  style="font-weight: 600;">HOME</a>
+              <nav class="my-navigation" role="navigation">
+                <div class="">
+                  <ul class="">
+                    <li class="dropdown">
+                      <a class="" href="{% url 'cert:certification' %}"  style="font-weight: 600;">문의하기</a>
+                      <div class="dropdown-content">
+                        <p class="sub-content"><a href="">1:1 문의</a></p>
+                        <p class="sub-content"><a href="">Q&A</a></p>
+                      </div>
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link" href=""  style="font-weight: 600;">교육안내</a>
-                        <div class="dropdown-content">
-                          <p class="sub-content"><a href="">인사말</a></p>
-                          <p class="sub-content"><a href="">이용방법</a></p>
-                          <p class="sub-content"><a href="">비용안내</a></p>
+                      <a class="" href="{% url 'cert:certification' %}"  style="font-weight: 600;">강의실</a>
+                      <div class="dropdown-content">
+                        <p class="sub-content"><a href="{% url 'edu:edu_list' %}">교육수강</a></p>
+                        <p class="sub-content"><a href="{% url 'exam:exam_list' %}">시험</a></p>
+                        <p class="sub-content"><a href="{% url 'cert:certification' %}">이수증</a></p>
 
-                        </div>
+                      </div>
                     </li>
                     <li class="dropdown">
-                      <a class="nav-link" href="{% url 'edu:edu_list' %}"  style="font-weight: 600;">교육신청</a>
+                      <a class="" href="{% url 'edu:edu_list' %}"  style="font-weight: 600;">교육신청</a>
                       <div class="dropdown-content">
                         <p class="sub-content"><a href="{% url 'edu:edu_list' %}">교육과목</a></p>
 
                       </div>
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link" href="{% url 'cert:certification' %}"  style="font-weight: 600;">강의실</a>
-                        <div class="dropdown-content">
-                          <p class="sub-content"><a href="{% url 'edu:edu_list' %}">교육수강</a></p>
-                          <p class="sub-content"><a href="{% url 'exam:exam_list' %}">시험</a></p>
-                          <p class="sub-content"><a href="{% url 'cert:certification' %}">이수증</a></p>
-
-                        </div>
-                    </li>
-                    <li class="dropdown">
-                      <a class="nav-link" href="{% url 'cert:certification' %}"  style="font-weight: 600;">문의하기</a>
+                      <a class="" href=""  style="font-weight: 600;">교육안내</a>
                       <div class="dropdown-content">
-                        <p class="sub-content"><a href="">1:1 문의</a></p>
-                        <p class="sub-content"><a href="">Q&A</a></p>
+                        <p class="sub-content"><a href="">인사말</a></p>
+                        <p class="sub-content"><a href="">이용방법</a></p>
+                        <p class="sub-content"><a href="">비용안내</a></p>
+
                       </div>
+                    </li>
+                  
+                    <li class="dropdown">
+                      <a class="" href="{% url 'index' %}"  style="font-weight: 600;">HOME</a>
                     </li>
                   </ul>
                 </div>
@@ -111,10 +122,10 @@
 
     </div>
   
-    <div class="site-blocks-cover overlay" style="background-image: url('/static/img/back.jpg')" data-aos="fade" data-stellar-background-ratio="0.5"id="home-section">
+    <div class="site-blocks-cover overlay" style="background-image: url('/static/img/back2.jpg'); height: 700px;" data-aos="fade" data-stellar-background-ratio="0.5"id="home-section">
     <!-- <img style="object-fit: fill; display: flex; width: 100%; position: absolute;" src="{% static 'img/back.jpg' %}" alt=""> -->
 
-      <div class="container dropmenu">
+      <div class="container ">
         <div class="row align-items-center text-center justify-content-center">
           <div class="col-md-8">
            
@@ -125,12 +136,12 @@
             <button onclick="location.href='/users/main/'">마이페이지</button>
             <button onclick="location.href='/users/logout/'">로그아웃</button>
             {% else %}
-            <button onclick="location.href='/users/login/'">로그인</button>
-            <button onclick="location.href='/users/agreement/'">회원가입</button>
+            <button onclick="location.href='/edu/'">교육신청</button>
+            <button onclick="location.href='/cert/'">수료증 출력</button>
             {% endif %}
           </div>
 
-        <img class="cert_img" src="{% static 'img/cert.jpg' %}" style="width: 25%; margin-left:500px; margin-top:10px; margin-bottom: -30px; position: absolute;">
+        <img class="cert_img" src="{% static 'img/cert.jpg' %}" style="width: 25%; margin-left:700px; margin-top:-216px; margin-bottom: -30px; position: absolute;">
 
         </div>
 
@@ -220,6 +231,8 @@
       
       </div>
     </section>
+    <div class="container">
+    </div>
 
 
     <footer class="site-footer">

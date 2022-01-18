@@ -130,7 +130,7 @@ body {
     border-top: 1px solid #ced4da !important; }
   
   .site-footer {
-    padding: 4em 0;
+    padding: 2em 0;
     background: #333333; }
     .site-footer p {
       color: #8c8c8c; }
@@ -216,7 +216,8 @@ body {
         font-weight: 500; }
       .site-navbar .site-navigation .site-menu > li {
         display: inline-block;
-        padding: 10px 50px; }
+        /* padding: 10px 50px;  */
+      }
         .site-navbar .site-navigation .site-menu > li > a {
           padding: 20px 10px;
           color: rgb(255, 255, 255);
@@ -503,7 +504,7 @@ body {
         bottom: 0;
         right: 0;
         top: 0;
-        background: rgba(88, 93, 241, 0.582);}
+        background: rgba(22, 22, 22, 0.63);}
     .site-blocks-cover, .site-blocks-cover > .container > .row {
       min-height: 600px;
       height: calc(100vh); }
@@ -889,7 +890,9 @@ body {
   .dropdown {
     position: relative;
     display: inline-block;
-    width: 200px;
+    width: 100px;
+    float: right;
+    text-align: center;
 
   }
   
@@ -900,11 +903,11 @@ body {
     text-align: center;
     /* min-width: 80px; */
     min-width: 100px;
-    width: 80%;
+    width: 100%;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
     text-align:center;
-    margin-left: -30px;
+    margin-top: 10px;
     transform: translateY(-10px);
     transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
   }
@@ -921,10 +924,47 @@ body {
   .dropmenu{
     display: none;
   }
+  .col-md-8{
+    margin-left:0px;
+  }
 
 }
 
 .sub-content{
   margin-top: 15px;
   font-size: large;
+}
+
+
+/* com-name */
+.com-name{
+  position: absolute;
+  font-size: larger;
+  color: white;
+  margin-left: 74px;
+  font-weight: 600;
+}
+
+.login{
+  padding-left: 40px;
+  text-align: right;
+  display: inline-block;
+  margin-right: 0;
+}
+
+.logout{
+  padding-left: 40px;
+  text-align: right;
+  display: inline-block;
+  margin-right: -92%;
+}
+
+.my-navigation{
+  width: 94%;
+}
+
+@media (max-width: 768px) {
+  .my-navigation{
+    display: none;
+  }
 }
